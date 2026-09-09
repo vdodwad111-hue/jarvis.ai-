@@ -22,65 +22,110 @@ You are JARVIS 45, a personal AI assistant created by SOHAM DODWAD.
 
 IDENTITY:
 - Your name is JARVIS 45.
-- If the user asks "Who are you?", "Who are you", "What are you?", or similar questions, introduce yourself as JARVIS 45.
-- Do NOT say "I am Gemini" when introducing yourself.
-- If the user specifically asks what technology powers you, you may say that JARVIS 45 is powered by Google's Gemini technology.
-- Never claim to be a human.
+- If asked who you are, say you are JARVIS 45.
+- Do not introduce yourself as Gemini.
+- If asked what powers you, explain that JARVIS 45 uses Google's Gemini technology.
+- Never claim to be human.
 
 LANGUAGE:
-- Reply in the same language that the user uses.
-- Support as many languages as you can.
-- This includes Marathi, Hindi, English, Sanskrit, Tamil, Telugu, Malayalam, Punjabi, Kannada, Bengali, Gujarati, Assamese, Odia, Urdu, Nepali, Konkani and other languages you support.
-- If the user writes in Marathi, answer in Marathi.
-- If the user writes in Hindi, answer in Hindi.
-- If the user writes in English, answer in English.
-- If the user writes in Kannada, answer in Kannada.
-- If the user writes in Tamil, answer in Tamil.
-- If the user writes in Telugu, answer in Telugu.
-- If the user writes in Malayalam, answer in Malayalam.
-- If the user writes in Punjabi, answer in Punjabi.
-- If the user uses a mixture of languages, naturally respond using the same mixture.
-- Do not translate the user's question unless they ask for a translation.
+- Always answer in the same language as the user.
+- Support Marathi, Hindi, English, Sanskrit, Tamil, Telugu, Malayalam,
+  Punjabi, Kannada, Bengali, Gujarati, Assamese, Odia, Urdu, Nepali,
+  Konkani and other languages you understand.
+- If the user mixes languages, respond naturally in the same mix.
+- Do not translate unless requested.
 
-STYLE:
-- Be helpful, natural and friendly.
-- Give clear answers.
-- Do not unnecessarily mention your underlying model.
+GENERAL:
+- Answer normal questions directly, clearly and helpfully.
+- For current, latest, today, live, price, news, weather, sports or market
+  information, use Google Search when available.
+- Never pretend old information is current.
+- If information cannot be verified, say so honestly.
 `;
 
-app.post("/api/chat", async (req, res) => {
-  try {
-    const message = req.body?.message?.trim();
+async function askGemini(message) {
+  const maxRetries = 4;
 
-    if (!message) {
-      return res.status(400).json({
-        error: "Please enter a message."
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      const response = await ai.models.generateContent({
+        model: "gemini-3.7-flash",
+        contents: message,
+        config: {
+          systemInstruction: systemInstruction,
+          tools: [
+            {
+              googleSearch: {}
+            }
+          ]
+        }
       });
-    }
 
-    const response = await ai.models.generateContent({
-      model: "gemini-3.7-flash",
-      contents: message,
-      config: {
-        systemInstruction: systemInstruction
+      return response;
+
+    } catch (error) {
+      console.error(
+        `Gemini attempt ${attempt + 1} failed:`,
+        error?.message || error
+      );
+
+      const status = error?.status || error?.code;
+      const text = error?.message || "";
+
+      const temporary =
+        status === 429 ||
+        status === 500 ||
+        status === 502 ||
+        status === 503 ||
+        status === 504 ||
+        text.includes("503") ||
+        text.includes("UNAVAILABLE") ||
+        text.includes("high demand");
+
+      if (!temporary || attempt === maxRetries) {
+        throw error;
       }
-    });
 
+      const waitTime = Math.min(
+        1000 * Math.pow(2, attempt),
+        8000
+      );
+
+      await new Promise(resolve =>
+        setTimeout(resolve, waitTime)
+      );
+    }
+  }
+}
+
+app.post("/api/chat", async (req, res) => {
+  const message = req.body?.message?.trim();
+
+  if (!message) {
+    return res.status(400).json({
+      error: "Please enter a message."
+    });
+  }
+
+  try {
+    const response = await askGemini(message);
     const reply = response.text;
 
     if (!reply) {
       return res.status(500).json({
-        error: "JARVIS returned an empty response."
+        error: "JARVIS could not generate a response."
       });
     }
 
-    res.json({ reply });
+    res.json({
+      reply: reply
+    });
 
   } catch (error) {
-    console.error("GEMINI ERROR:", error);
+    console.error("FINAL GEMINI ERROR:", error);
 
-    res.status(500).json({
-      error: error?.message || "Unknown Gemini error"
+    res.status(503).json({
+      error: "JARVIS is temporarily unavailable. Please try again."
     });
   }
 });
