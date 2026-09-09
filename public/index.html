@@ -6,7 +6,9 @@
 <title>JARVIS 45</title>
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
 body{
   margin:0;
@@ -30,7 +32,9 @@ body:before{
 }
 
 @keyframes bg{
-  50%{transform:rotate(8deg) scale(1.08)}
+  50%{
+    transform:rotate(8deg) scale(1.08);
+  }
 }
 
 .top{
@@ -59,6 +63,7 @@ body:before{
   background:rgba(15,27,42,.7);
   color:#fff;
   font-size:22px;
+  cursor:pointer;
 }
 
 .main{
@@ -83,6 +88,7 @@ body:before{
   font-size:20px;
   font-weight:bold;
   letter-spacing:2px;
+
   background:
     radial-gradient(circle at 35% 30%,
     #fff 0%,
@@ -91,10 +97,12 @@ body:before{
     #0868d9 48%,
     #031a3d 72%,
     #020817 100%);
+
   box-shadow:
     0 0 20px #168cff,
     0 0 60px rgba(0,130,255,.8),
     0 0 120px rgba(0,100,255,.35);
+
   position:relative;
   animation:core 3s ease-in-out infinite;
 }
@@ -124,6 +132,7 @@ body:before{
 @keyframes core{
   50%{
     transform:scale(1.06);
+
     box-shadow:
       0 0 30px #168cff,
       0 0 80px rgba(0,130,255,.9),
@@ -165,7 +174,9 @@ body:before{
 }
 
 @keyframes blink{
-  50%{opacity:.3}
+  50%{
+    opacity:.3;
+  }
 }
 
 .chat{
@@ -236,12 +247,60 @@ textarea::placeholder{
   box-shadow:0 0 18px rgba(0,140,255,.45);
 }
 
+/* CHAT HISTORY */
+
 .reply{
   width:min(700px,100%);
   margin-top:18px;
-  color:#cfe8ff;
-  min-height:25px;
+  max-height:250px;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  padding:5px;
+  scroll-behavior:smooth;
 }
+
+.reply::-webkit-scrollbar{
+  width:5px;
+}
+
+.reply::-webkit-scrollbar-thumb{
+  background:#263b55;
+  border-radius:10px;
+}
+
+.message{
+  max-width:82%;
+  padding:12px 15px;
+  border-radius:18px;
+  line-height:1.45;
+  white-space:pre-wrap;
+  word-wrap:break-word;
+  font-size:15px;
+}
+
+.user-message{
+  align-self:flex-end;
+  background:#168cff;
+  color:#fff;
+  border-bottom-right-radius:5px;
+  box-shadow:0 5px 20px rgba(0,140,255,.18);
+}
+
+.jarvis-message{
+  align-self:flex-start;
+  background:#101b2a;
+  color:#cfe8ff;
+  border:1px solid #263b55;
+  border-bottom-left-radius:5px;
+}
+
+.typing{
+  opacity:.7;
+}
+
+/* CREATE MENU */
 
 .create{
   display:none;
@@ -267,6 +326,8 @@ textarea::placeholder{
   background:#16263a;
 }
 
+/* SIDE MENU */
+
 .side{
   position:fixed;
   top:0;
@@ -281,7 +342,9 @@ textarea::placeholder{
   box-shadow:15px 0 50px rgba(0,0,0,.4);
 }
 
-.side.open{left:0}
+.side.open{
+  left:0;
+}
 
 .side h2{
   color:#65c5ff;
@@ -294,6 +357,7 @@ textarea::placeholder{
   border:1px solid #1d2d42;
   border-radius:15px;
   background:#0d1724;
+  cursor:pointer;
 }
 
 .item:hover{
@@ -301,7 +365,10 @@ textarea::placeholder{
   background:#122338;
 }
 
+/* MOBILE */
+
 @media(max-width:600px){
+
   .core{
     width:125px;
     height:125px;
@@ -325,6 +392,14 @@ textarea::placeholder{
   .chat{
     border-radius:21px;
   }
+
+  .reply{
+    max-height:230px;
+  }
+
+  .message{
+    max-width:88%;
+  }
 }
 </style>
 </head>
@@ -332,9 +407,17 @@ textarea::placeholder{
 <body>
 
 <div class="top">
-  <div class="logo">JARVIS 45</div>
-  <button class="menu" onclick="toggleSide()">☰</button>
+
+  <div class="logo">
+    JARVIS 45
+  </div>
+
+  <button class="menu" onclick="toggleSide()">
+    ☰
+  </button>
+
 </div>
+
 
 <div class="main">
 
@@ -342,162 +425,444 @@ textarea::placeholder{
     JARVIS<br>45
   </div>
 
+
   <div class="status">
-  <h1>Hello, I Am JARVIS</h1>
-  <p>Founded &amp; Developed by SOHAM DODWAD</p>
+
+    <h1>
+      Hello, I Am JARVIS
+    </h1>
+
+    <p>
+      Founded &amp; Developed by SOHAM DODWAD
+    </p>
 
     <div class="online">
       <span class="dot"></span>
       SYSTEM ONLINE
     </div>
+
   </div>
+
+
+  <!-- CHAT INPUT -->
 
   <div class="chat">
 
-    <textarea id="question"
-      placeholder="Ask JARVIS anything..."></textarea>
+    <textarea
+      id="question"
+      placeholder="Ask JARVIS anything..."
+    ></textarea>
+
 
     <div class="controls">
 
       <div class="tools">
 
-        <button class="btn"
-          onclick="toggleCreate()">＋</button>
+        <button
+          class="btn"
+          onclick="toggleCreate()">
+          ＋
+        </button>
 
-        <button class="btn"
-          onclick="voice()">🎙</button>
+        <button
+          class="btn"
+          onclick="voice()">
+          🎙
+        </button>
 
       </div>
 
-      <button class="btn send"
-        onclick="ask()">↑</button>
+
+      <button
+        class="btn send"
+        onclick="ask()">
+        ↑
+      </button>
 
     </div>
 
   </div>
 
-  <div class="reply" id="reply"></div>
+
+  <!-- CHAT HISTORY -->
+
+  <div
+    class="reply"
+    id="reply">
+  </div>
 
 </div>
 
-<div class="create" id="create">
-  <div onclick="createFile()">📄 Create File</div>
-  <div>📎 Upload File</div>
-  <div>🖼️ Add Image</div>
+
+<!-- CREATE MENU -->
+
+<div
+  class="create"
+  id="create">
+
+  <div onclick="createFile()">
+    📄 Create File
+  </div>
+
+  <div>
+    📎 Upload File
+  </div>
+
+  <div>
+    🖼️ Add Image
+  </div>
+
 </div>
 
-<div class="side" id="side">
 
-  <h2>JARVIS 45</h2>
+<!-- SIDE MENU -->
 
-  <div class="item">＋ New Chat</div>
-  <div class="item">🕘 Chat History</div>
-  <div class="item">📁 My Files</div>
-  <div class="item">⚙️ Settings</div>
-  <div class="item">💬 Feedback</div>
-  <div class="item" onclick="toggleSide()">✕ Close</div>
+<div
+  class="side"
+  id="side">
+
+  <h2>
+    JARVIS 45
+  </h2>
+
+  <div class="item">
+    ＋ New Chat
+  </div>
+
+  <div class="item">
+    🕘 Chat History
+  </div>
+
+  <div class="item">
+    📁 My Files
+  </div>
+
+  <div class="item">
+    ⚙️ Settings
+  </div>
+
+  <div class="item">
+    💬 Feedback
+  </div>
+
+  <div
+    class="item"
+    onclick="toggleSide()">
+    ✕ Close
+  </div>
 
 </div>
+
 
 <script>
 
+/* ASK JARVIS */
+
 async function ask(){
 
-  const q = document.getElementById("question").value.trim();
-  const reply = document.getElementById("reply");
+  const input =
+    document.getElementById("question");
+
+  const q =
+    input.value.trim();
+
+  const reply =
+    document.getElementById("reply");
+
 
   if(!q){
-    reply.innerText = "I'm listening... Ask me something.";
+
+    addMessage(
+      "I'm listening... Ask me something.",
+      "jarvis"
+    );
+
     return;
   }
 
-  reply.innerText = "JARVIS is thinking...";
+
+  /* USER MESSAGE */
+
+  addMessage(
+    q,
+    "user"
+  );
+
+
+  /* CLEAR INPUT */
+
+  input.value = "";
+
+
+  /* TYPING MESSAGE */
+
+  const typing =
+    addMessage(
+      "JARVIS is thinking...",
+      "jarvis"
+    );
+
+  typing.classList.add("typing");
+
 
   try{
 
-    const res = await fetch("/api/chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        message: q
-      })
-    });
+    const res =
+      await fetch(
+        "/api/chat",
+        {
+          method:"POST",
 
-    const data = await res.json();
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
+
+          body:JSON.stringify({
+            message:q
+          })
+        }
+      );
+
+
+    const data =
+      await res.json();
+
 
     if(!res.ok){
-      throw new Error(data.error || "Request failed");
+
+      throw new Error(
+        data.error ||
+        "Request failed"
+      );
+
     }
 
-    reply.innerText = data.reply;
+
+    /* REPLACE TYPING MESSAGE */
+
+    typing.classList.remove("typing");
+
+    typing.textContent =
+      data.reply || 
+      "Gemini returned an empty response.";
+
+
+    scrollChat();
+
 
   }catch(error){
 
     console.error(error);
 
-    reply.innerText =
+    typing.classList.remove("typing");
+
+    typing.textContent =
       "Sorry, JARVIS couldn't respond.";
 
   }
+
+}
+
+
+/* ADD MESSAGE */
+
+function addMessage(text,type){
+
+  const reply =
+    document.getElementById("reply");
+
+
+  const message =
+    document.createElement("div");
+
+
+  message.classList.add(
+    "message"
+  );
+
+
+  if(type === "user"){
+
+    message.classList.add(
+      "user-message"
+    );
+
+  }else{
+
+    message.classList.add(
+      "jarvis-message"
+    );
+
   }
 
-function toggleSide(){
-  document.getElementById("side")
-    .classList.toggle("open");
+
+  message.textContent =
+    text;
+
+
+  reply.appendChild(
+    message
+  );
+
+
+  scrollChat();
+
+
+  return message;
 }
+
+
+/* AUTO SCROLL */
+
+function scrollChat(){
+
+  const reply =
+    document.getElementById("reply");
+
+  reply.scrollTop =
+    reply.scrollHeight;
+
+}
+
+
+/* ENTER TO SEND */
+
+document
+  .getElementById("question")
+  .addEventListener(
+    "keydown",
+    function(event){
+
+      if(
+        event.key === "Enter" &&
+        !event.shiftKey
+      ){
+
+        event.preventDefault();
+
+        ask();
+
+      }
+
+    }
+  );
+
+
+/* SIDE MENU */
+
+function toggleSide(){
+
+  document
+    .getElementById("side")
+    .classList
+    .toggle("open");
+
+}
+
+
+/* CREATE MENU */
 
 function toggleCreate(){
 
-  const menu=document.getElementById("create");
+  const menu =
+    document.getElementById("create");
 
-  menu.style.display=
-    menu.style.display==="block"
+
+  menu.style.display =
+    menu.style.display === "block"
     ? "none"
     : "block";
+
 }
+
+
+/* CREATE FILE */
 
 function createFile(){
 
-  document.getElementById("reply").innerText=
-    "📄 Create File selected.";
+  addMessage(
+    "📄 Create File selected.",
+    "jarvis"
+  );
 
-  document.getElementById("create").style.display="none";
+
+  document
+    .getElementById("create")
+    .style.display =
+      "none";
+
 }
+
+
+/* VOICE */
 
 function voice(){
 
-  if(!("webkitSpeechRecognition" in window)){
+  if(
+    !("webkitSpeechRecognition"
+      in window)
+  ){
 
-    document.getElementById("reply").innerText=
-      "Voice recognition is not supported.";
+    addMessage(
+      "Voice recognition is not supported.",
+      "jarvis"
+    );
 
     return;
   }
 
-  const recognition=new webkitSpeechRecognition();
 
-  recognition.lang="en-IN";
+  const recognition =
+    new webkitSpeechRecognition();
 
-  recognition.onstart=function(){
-    document.getElementById("reply").innerText=
-      "🎙️ Listening...";
-  };
 
-  recognition.onresult=function(event){
+  recognition.lang =
+    "en-IN";
 
-    document.getElementById("question").value=
-      event.results[0][0].transcript;
 
-    document.getElementById("reply").innerText=
-      "Voice received. Press ↑ to send.";
-  };
+  recognition.onstart =
+    function(){
+
+      addMessage(
+        "🎙️ Listening...",
+        "jarvis"
+      );
+
+    };
+
+
+  recognition.onresult =
+    function(event){
+
+      document
+        .getElementById("question")
+        .value =
+          event
+          .results[0][0]
+          .transcript;
+
+    };
+
+
+  recognition.onerror =
+    function(){
+
+      addMessage(
+        "Voice recognition failed.",
+        "jarvis"
+      );
+
+    };
+
 
   recognition.start();
+
 }
 
 </script>
 
 </body>
-</html>
+  </html>
+
+
