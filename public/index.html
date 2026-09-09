@@ -12,7 +12,7 @@
 
 body{
   margin:0;
-  min-height:100vh;
+  height:100vh;
   background:#030711;
   color:#fff;
   font-family:Arial,sans-serif;
@@ -63,7 +63,6 @@ body:before{
   background:rgba(15,27,42,.7);
   color:#fff;
   font-size:22px;
-  cursor:pointer;
 }
 
 .main{
@@ -71,21 +70,28 @@ body:before{
   display:flex;
   flex-direction:column;
   align-items:center;
-  padding:20px;
   position:relative;
   z-index:2;
-  overflow:hidden;
+}
+
+/* TOP JARVIS AREA */
+
+.hero{
+  flex-shrink:0;
+  text-align:center;
+  padding-top:20px;
 }
 
 .core{
-  width:155px;
-  height:155px;
+  width:125px;
+  height:125px;
+  margin:auto;
   border-radius:50%;
   display:flex;
   align-items:center;
   justify-content:center;
   text-align:center;
-  font-size:20px;
+  font-size:17px;
   font-weight:bold;
   letter-spacing:2px;
 
@@ -116,52 +122,45 @@ body:before{
 }
 
 .core:before{
-  width:205px;
-  height:75px;
+  width:170px;
+  height:65px;
   transform:rotate(25deg);
-  box-shadow:0 0 15px rgba(0,160,255,.5);
 }
 
 .core:after{
-  width:225px;
-  height:85px;
+  width:185px;
+  height:70px;
   transform:rotate(-25deg);
-  box-shadow:0 0 15px rgba(0,160,255,.5);
 }
 
 @keyframes core{
   50%{
     transform:scale(1.06);
-
-    box-shadow:
-      0 0 30px #168cff,
-      0 0 80px rgba(0,130,255,.9),
-      0 0 140px rgba(0,100,255,.4);
   }
 }
 
 .status{
-  margin-top:38px;
-  text-align:center;
+  margin-top:20px;
 }
 
 .status h1{
   margin:0;
-  font-size:32px;
+  font-size:28px;
 }
 
 .status p{
-  margin-top:10px;
+  margin:8px 0 0;
   color:#72839a;
+  font-size:13px;
 }
 
 .online{
   display:inline-flex;
   align-items:center;
   gap:7px;
-  margin-top:10px;
+  margin-top:8px;
   color:#6fc9ff;
-  font-size:13px;
+  font-size:12px;
 }
 
 .dot{
@@ -170,25 +169,73 @@ body:before{
   border-radius:50%;
   background:#32b8ff;
   box-shadow:0 0 12px #32b8ff;
-  animation:blink 1.5s infinite;
 }
 
-@keyframes blink{
-  50%{
-    opacity:.3;
-  }
+/* MESSAGES */
+
+.reply{
+  width:min(700px,92%);
+  flex:1;
+  min-height:0;
+  margin-top:15px;
+  padding:8px 4px;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  scroll-behavior:smooth;
 }
+
+.reply::-webkit-scrollbar{
+  width:5px;
+}
+
+.reply::-webkit-scrollbar-thumb{
+  background:#263b55;
+  border-radius:10px;
+}
+
+.message{
+  max-width:82%;
+  padding:12px 15px;
+  border-radius:18px;
+  line-height:1.45;
+  white-space:pre-wrap;
+  word-wrap:break-word;
+  font-size:15px;
+}
+
+.user-message{
+  align-self:flex-end;
+  background:#168cff;
+  color:#fff;
+  border-bottom-right-radius:5px;
+}
+
+.jarvis-message{
+  align-self:flex-start;
+  background:#101b2a;
+  color:#cfe8ff;
+  border:1px solid #263b55;
+  border-bottom-left-radius:5px;
+}
+
+.typing{
+  opacity:.7;
+}
+
+/* INPUT BOX */
 
 .chat{
-  width:min(700px,100%);
-  margin-top:28px;
+  width:min(700px,92%);
+  flex-shrink:0;
+  margin:10px 0 15px;
   padding:14px;
   border:1px solid #24364d;
   border-radius:25px;
-  background:rgba(12,20,32,.82);
-  box-shadow:0 15px 50px rgba(0,0,0,.4);
+  background:rgba(12,20,32,.94);
+  box-shadow:0 0 30px rgba(0,0,0,.5);
   backdrop-filter:blur(20px);
-  transition:.3s;
 }
 
 .chat:focus-within{
@@ -198,7 +245,7 @@ body:before{
 
 textarea{
   width:100%;
-  height:58px;
+  height:55px;
   border:0;
   outline:0;
   resize:none;
@@ -232,99 +279,12 @@ textarea::placeholder{
   color:#fff;
   font-size:18px;
   cursor:pointer;
-  transition:.2s;
-}
-
-.btn:hover{
-  transform:translateY(-2px);
-  border-color:#168cff;
-  box-shadow:0 0 15px rgba(0,140,255,.4);
 }
 
 .send{
   background:#168cff;
   border:0;
   box-shadow:0 0 18px rgba(0,140,255,.45);
-}
-
-/* CHAT HISTORY */
-
-.reply{
-  width:min(700px,100%);
-  flex:1;
-  margin-top:18px;
-  min-height:0;
-  overflow-y:auto;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  padding:5px;
-  scroll-behavior:smooth;
-}
-
-.reply::-webkit-scrollbar{
-  width:5px;
-}
-
-.reply::-webkit-scrollbar-thumb{
-  background:#263b55;
-  border-radius:10px;
-}
-
-.message{
-  max-width:82%;
-  padding:12px 15px;
-  border-radius:18px;
-  line-height:1.45;
-  white-space:pre-wrap;
-  word-wrap:break-word;
-  font-size:15px;
-}
-
-.user-message{
-  align-self:flex-end;
-  background:#168cff;
-  color:#fff;
-  border-bottom-right-radius:5px;
-  box-shadow:0 5px 20px rgba(0,140,255,.18);
-}
-
-.jarvis-message{
-  align-self:flex-start;
-  background:#101b2a;
-  color:#cfe8ff;
-  border:1px solid #263b55;
-  border-bottom-left-radius:5px;
-}
-
-.typing{
-  opacity:.7;
-}
-
-/* CREATE MENU */
-
-.create{
-  display:none;
-  position:absolute;
-  bottom:85px;
-  left:15px;
-  width:190px;
-  padding:8px;
-  border:1px solid #263b55;
-  border-radius:18px;
-  background:#0d1725;
-  box-shadow:0 15px 40px rgba(0,0,0,.5);
-  z-index:10;
-}
-
-.create div{
-  padding:13px;
-  border-radius:12px;
-  color:#dceeff;
-}
-
-.create div:hover{
-  background:#16263a;
 }
 
 /* SIDE MENU */
@@ -340,7 +300,6 @@ textarea::placeholder{
   border-right:1px solid #263b55;
   z-index:20;
   transition:.35s ease;
-  box-shadow:15px 0 50px rgba(0,0,0,.4);
 }
 
 .side.open{
@@ -358,48 +317,69 @@ textarea::placeholder{
   border:1px solid #1d2d42;
   border-radius:15px;
   background:#0d1724;
-  cursor:pointer;
 }
 
-.item:hover{
-  border-color:#168cff;
-  background:#122338;
+/* CREATE MENU */
+
+.create{
+  display:none;
+  position:fixed;
+  bottom:85px;
+  left:15px;
+  width:190px;
+  padding:8px;
+  border:1px solid #263b55;
+  border-radius:18px;
+  background:#0d1725;
+  z-index:15;
 }
 
-/* MOBILE */
+.create div{
+  padding:13px;
+  border-radius:12px;
+}
 
 @media(max-width:600px){
 
+  .hero{
+    padding-top:12px;
+  }
+
   .core{
-    width:125px;
-    height:125px;
-    font-size:17px;
+    width:100px;
+    height:100px;
+    font-size:15px;
   }
 
   .core:before{
-    width:170px;
-    height:65px;
+    width:140px;
+    height:55px;
   }
 
   .core:after{
-    width:185px;
-    height:70px;
+    width:155px;
+    height:60px;
+  }
+
+  .status{
+    margin-top:15px;
   }
 
   .status h1{
-    font-size:27px;
+    font-size:23px;
   }
 
-  .chat{
-    border-radius:21px;
+  .status p{
+    font-size:11px;
   }
 
   .reply{
-    max-height:230px;
+    width:92%;
   }
 
-  .message{
-    max-width:88%;
+  .chat{
+    width:92%;
+    border-radius:21px;
   }
 }
 </style>
@@ -422,30 +402,39 @@ textarea::placeholder{
 
 <div class="main">
 
-  <div class="core">
-    JARVIS<br>45
-  </div>
+  <div class="hero">
 
+    <div class="core">
+      JARVIS<br>45
+    </div>
 
-  <div class="status">
+    <div class="status">
 
-    <h1>
-      Hello, I Am JARVIS
-    </h1>
+      <h1>Hello, I Am JARVIS</h1>
 
-    <p>
-      Founded &amp; Developed by SOHAM DODWAD
-    </p>
+      <p>
+        Founded &amp; Developed by SOHAM DODWAD
+      </p>
 
-    <div class="online">
-      <span class="dot"></span>
-      SYSTEM ONLINE
+      <div class="online">
+        <span class="dot"></span>
+        SYSTEM ONLINE
+      </div>
+
     </div>
 
   </div>
 
 
-  <!-- CHAT INPUT -->
+  <!-- CHAT MESSAGES -->
+
+  <div
+    class="reply"
+    id="reply">
+  </div>
+
+
+  <!-- CHAT BOX AT BOTTOM -->
 
   <div class="chat">
 
@@ -453,7 +442,6 @@ textarea::placeholder{
       id="question"
       placeholder="Ask JARVIS anything..."
     ></textarea>
-
 
     <div class="controls">
 
@@ -473,7 +461,6 @@ textarea::placeholder{
 
       </div>
 
-
       <button
         class="btn send"
         onclick="ask()">
@@ -482,14 +469,6 @@ textarea::placeholder{
 
     </div>
 
-  </div>
-
-
-  <!-- CHAT HISTORY -->
-
-  <div
-    class="reply"
-    id="reply">
   </div>
 
 </div>
@@ -522,9 +501,7 @@ textarea::placeholder{
   class="side"
   id="side">
 
-  <h2>
-    JARVIS 45
-  </h2>
+  <h2>JARVIS 45</h2>
 
   <div class="item">
     ＋ New Chat
@@ -557,7 +534,7 @@ textarea::placeholder{
 
 <script>
 
-/* ASK JARVIS */
+/* ASK */
 
 async function ask(){
 
@@ -566,10 +543,6 @@ async function ask(){
 
   const q =
     input.value.trim();
-
-  const reply =
-    document.getElementById("reply");
-
 
   if(!q){
 
@@ -582,20 +555,10 @@ async function ask(){
   }
 
 
-  /* USER MESSAGE */
-
-  addMessage(
-    q,
-    "user"
-  );
-
-
-  /* CLEAR INPUT */
+  addMessage(q,"user");
 
   input.value = "";
 
-
-  /* TYPING MESSAGE */
 
   const typing =
     addMessage(
@@ -640,14 +603,11 @@ async function ask(){
     }
 
 
-    /* REPLACE TYPING MESSAGE */
-
     typing.classList.remove("typing");
 
     typing.textContent =
-      data.reply || 
-      "Gemini returned an empty response.";
-
+      data.reply ||
+      "No response received.";
 
     scrollChat();
 
@@ -673,15 +633,10 @@ function addMessage(text,type){
   const reply =
     document.getElementById("reply");
 
-
   const message =
     document.createElement("div");
 
-
-  message.classList.add(
-    "message"
-  );
-
+  message.classList.add("message");
 
   if(type === "user"){
 
@@ -697,24 +652,17 @@ function addMessage(text,type){
 
   }
 
+  message.textContent = text;
 
-  message.textContent =
-    text;
-
-
-  reply.appendChild(
-    message
-  );
-
+  reply.appendChild(message);
 
   scrollChat();
-
 
   return message;
 }
 
 
-/* AUTO SCROLL */
+/* SCROLL */
 
 function scrollChat(){
 
@@ -727,7 +675,7 @@ function scrollChat(){
 }
 
 
-/* ENTER TO SEND */
+/* ENTER */
 
 document
   .getElementById("question")
@@ -750,7 +698,7 @@ document
   );
 
 
-/* SIDE MENU */
+/* SIDE */
 
 function toggleSide(){
 
@@ -762,13 +710,12 @@ function toggleSide(){
 }
 
 
-/* CREATE MENU */
+/* CREATE */
 
 function toggleCreate(){
 
   const menu =
     document.getElementById("create");
-
 
   menu.style.display =
     menu.style.display === "block"
@@ -778,15 +725,12 @@ function toggleCreate(){
 }
 
 
-/* CREATE FILE */
-
 function createFile(){
 
   addMessage(
     "📄 Create File selected.",
     "jarvis"
   );
-
 
   document
     .getElementById("create")
@@ -813,14 +757,11 @@ function voice(){
     return;
   }
 
-
   const recognition =
     new webkitSpeechRecognition();
 
-
   recognition.lang =
     "en-IN";
-
 
   recognition.onstart =
     function(){
@@ -831,7 +772,6 @@ function voice(){
       );
 
     };
-
 
   recognition.onresult =
     function(event){
@@ -844,18 +784,6 @@ function voice(){
           .transcript;
 
     };
-
-
-  recognition.onerror =
-    function(){
-
-      addMessage(
-        "Voice recognition failed.",
-        "jarvis"
-      );
-
-    };
-
 
   recognition.start();
 
