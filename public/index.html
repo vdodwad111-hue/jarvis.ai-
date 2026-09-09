@@ -1,64 +1,226 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>JARVIS AI</title>
+
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      background: #050505;
+      margin: 0;
+      min-height: 100vh;
+      background: #020611;
       color: white;
-      font-family: Arial;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    .glow {
+      position: fixed;
+      width: 350px;
+      height: 350px;
+      border: 2px solid #008cff;
+      border-radius: 50%;
+      filter: blur(2px);
+      opacity: 0.35;
+      animation: move 6s infinite alternate ease-in-out;
+    }
+
+    .glow.one {
+      top: -180px;
+      left: -100px;
+    }
+
+    .glow.two {
+      bottom: -180px;
+      right: -100px;
+      animation-delay: 2s;
+    }
+
+    @keyframes move {
+      from {
+        transform: scale(1) rotate(0deg);
+      }
+      to {
+        transform: scale(1.3) rotate(180deg);
+      }
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+      width: 92%;
+      max-width: 650px;
+      margin: auto;
+      padding-top: 55px;
       text-align: center;
-      padding: 40px 20px;
     }
 
     h1 {
-      font-size: 40px;
+      font-size: 48px;
+      margin: 0;
+      color: #35aaff;
+      text-shadow:
+        0 0 10px #008cff,
+        0 0 30px #006eff;
+      letter-spacing: 4px;
+    }
+
+    .status {
+      margin-top: 10px;
+      color: #73c9ff;
+      font-size: 14px;
+    }
+
+    .arc {
+      width: 230px;
+      height: 115px;
+      margin: 35px auto;
+      border: 3px solid #008cff;
+      border-bottom: 0;
+      border-radius: 230px 230px 0 0;
+      box-shadow:
+        0 0 15px #008cff,
+        0 0 40px #006eff;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      50% {
+        transform: scale(1.08);
+        opacity: 0.7;
+      }
+    }
+
+    .card {
+      background: rgba(0, 30, 60, 0.45);
+      border: 1px solid #008cff;
+      border-radius: 30px;
+      padding: 25px;
+      box-shadow:
+        0 0 20px rgba(0, 140, 255, 0.4),
+        inset 0 0 20px rgba(0, 100, 255, 0.08);
+      backdrop-filter: blur(10px);
     }
 
     input {
-      width: 90%;
-      padding: 15px;
-      border-radius: 25px;
-      border: 1px solid #555;
-      background: #111;
+      width: 100%;
+      padding: 16px 20px;
+      border-radius: 30px;
+      border: 1px solid #008cff;
+      outline: none;
+      background: #030b18;
       color: white;
+      font-size: 16px;
+      box-shadow: 0 0 12px rgba(0, 140, 255, 0.25);
+    }
+
+    input::placeholder {
+      color: #7da8c9;
     }
 
     button {
-      margin-top: 15px;
-      padding: 12px 25px;
-      border: 0;
-      border-radius: 25px;
+      margin: 15px 6px 0;
+      padding: 13px 25px;
+      border: 1px solid #00aaff;
+      border-radius: 30px;
+      background: #006eff;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 0 15px #006eff;
+    }
+
+    button:hover {
+      background: #009dff;
+      box-shadow: 0 0 25px #009dff;
     }
 
     #reply {
-      margin-top: 30px;
-      font-size: 20px;
+      margin-top: 25px;
+      min-height: 30px;
+      color: #8ed4ff;
+      font-size: 18px;
+    }
+
+    .footer {
+      margin-top: 25px;
+      color: #456b88;
+      font-size: 12px;
     }
   </style>
 </head>
 
 <body>
 
-<h1>JARVIS AI 🤖</h1>
-<p>How can I help you?</p>
+  <div class="glow one"></div>
+  <div class="glow two"></div>
 
-<input id="question" placeholder="Ask JARVIS...">
-<br>
+  <div class="container">
 
-<button onclick="ask()">Ask JARVIS</button>
+    <h1>JARVIS</h1>
 
-<div id="reply"></div>
+    <div class="status">● SYSTEM ONLINE</div>
 
-<script>
-function ask() {
-  const q = document.getElementById("question").value;
+    <div class="arc"></div>
 
-  document.getElementById("reply").innerText =
-    "You asked: " + q;
-}
-</script>
+    <div class="card">
+
+      <input
+        id="question"
+        type="text"
+        placeholder="Ask JARVIS anything..."
+      >
+
+      <button onclick="ask()">SEND</button>
+      <button onclick="voice()">🎙️ VOICE</button>
+
+      <div id="reply"></div>
+
+    </div>
+
+    <div class="footer">
+      JARVIS AI • Personal Assistant
+    </div>
+
+  </div>
+
+  <script>
+    function ask() {
+      const q = document.getElementById("question").value.trim();
+      const reply = document.getElementById("reply");
+
+      if (q === "") {
+        reply.innerText = "Please ask me something.";
+        return;
+      }
+
+      reply.innerText = "You asked: " + q;
+    }
+
+    function voice() {
+      if (!("webkitSpeechRecognition" in window)) {
+        document.getElementById("reply").innerText =
+          "Voice recognition is not supported.";
+        return;
+      }
+
+      const recognition = new webkitSpeechRecognition();
+
+      recognition.lang = "en-IN";
+
+      recognition.onresult = function(event) {
+        document.getElementById("question").value =
+          event.results[0][0].transcript;
+      };
+
+      recognition.start();
+    }
+  </script>
 
 </body>
-</html>
+      </html>
