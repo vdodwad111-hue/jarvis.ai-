@@ -53,11 +53,7 @@ async function askGemini(message) {
         contents: message,
         config: {
           systemInstruction: systemInstruction,
-          tools: [
-            {
-              googleSearch: {}
-            }
-          ]
+          
         }
       });
 
