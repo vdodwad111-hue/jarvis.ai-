@@ -1,4 +1,4 @@
-const express = require("express");
+ const express = require("express");
 const { GoogleGenAI } = require("@google/genai");
 
 const app = express();
@@ -16,12 +16,23 @@ app.post("/api/chat", async (req, res) => {
     const message = req.body.message;
 
     if (!message) {
-      return res.status(400).json({ error: "Message is required" });
+      return res.status(400).json({
+        error: "Message is required"
+      });
     }
 
     const response = await ai.models.generateContent({
       model: "gemini-3.6-flash",
-      contents: message
+      contents: [
+        {
+          role: "user",
+          parts: [
+            {
+              text: message
+            }
+          ]
+        }
+      ]
     });
 
     res.json({
@@ -29,9 +40,10 @@ app.post("/api/chat", async (req, res) => {
     });
 
   } catch (error) {
-    console.error(error);
+    console.error("Gemini Error:", error);
+
     res.status(500).json({
-      error: "JARVIS could not respond."
+      error: error.message || "JARVIS could not respond."
     });
   }
 });
