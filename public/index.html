@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JARVIS AI</title>
+  <style>
+    body {
+      background: #050505;
+      color: white;
+      font-family: Arial;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      font-size: 40px;
+    }
+
+    input {
+      width: 90%;
+      padding: 15px;
+      border-radius: 25px;
+      border: 1px solid #555;
+      background: #111;
+      color: white;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 12px 25px;
+      border: 0;
+      border-radius: 25px;
+    }
+
+    #reply {
+      margin-top: 30px;
+      font-size: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>JARVIS AI 🤖</h1>
+<p>How can I help you?</p>
+
+<input id="question" placeholder="Ask JARVIS...">
+<br>
+
+<button onclick="ask()">Ask JARVIS</button>
+
+<div id="reply"></div>
+
+<script>
+function ask() {
+  const q = document.getElementById("question").value;
+
+  document.getElementById("reply").innerText =
+    "You asked: " + q;
+}
+</script>
+
+</body>
+</html>
