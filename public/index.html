@@ -401,24 +401,47 @@ textarea::placeholder{
 
 <script>
 
-function ask(){
+async function ask(){
 
-  const q=document.getElementById("question").value.trim();
+  const q = document.getElementById("question").value.trim();
+  const reply = document.getElementById("reply");
 
   if(!q){
-    document.getElementById("reply").innerText=
-      "I'm listening... Ask me something.";
+    reply.innerText = "I'm listening... Ask me something.";
     return;
   }
 
-  document.getElementById("reply").innerText=
-    "JARVIS is thinking...";
+  reply.innerText = "JARVIS is thinking...";
 
-  setTimeout(()=>{
-    document.getElementById("reply").innerText=
-      "You asked: "+q;
-  },700);
-}
+  try{
+
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        message: q
+      })
+    });
+
+    const data = await res.json();
+
+    if(!res.ok){
+      throw new Error(data.error || "Request failed");
+    }
+
+    reply.innerText = data.reply;
+
+  }catch(error){
+
+    console.error(error);
+
+    reply.innerText =
+      "Sorry, JARVIS couldn't respond.";
+
+  }
+  }
 
 function toggleSide(){
   document.getElementById("side")
