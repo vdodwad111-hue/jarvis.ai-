@@ -3,410 +3,449 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>JARVIS AI</title>
+<title>JARVIS 45</title>
 
 <style>
-* {
-  box-sizing: border-box;
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:#0b0f14;
+  color:white;
+  font-family:Arial,sans-serif;
+  height:100vh;
+  overflow:hidden;
 }
 
-body {
-  margin: 0;
-  background: #0b0f16;
-  color: #ffffff;
-  font-family: Arial, sans-serif;
+.top{
+  height:65px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 18px;
+  border-bottom:1px solid #202733;
 }
 
-/* TOP BAR */
-
-.topbar {
-  height: 65px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 18px;
-  border-bottom: 1px solid #202938;
+.brand{
+  font-size:21px;
+  font-weight:bold;
+  color:#65baff;
 }
 
-.logo {
-  font-size: 23px;
-  font-weight: bold;
-  color: #4da6ff;
+.menuBtn{
+  background:none;
+  border:0;
+  color:white;
+  font-size:25px;
 }
 
-.menu {
-  font-size: 25px;
-  cursor: pointer;
+.main{
+  height:calc(100vh - 65px);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
 }
 
-/* MAIN */
+.orb{
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-weight:bold;
+  font-size:18px;
+  letter-spacing:1px;
 
-.main {
-  min-height: calc(100vh - 65px);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 25px;
+  background:radial-gradient(
+    circle,
+    #e5f7ff 0%,
+    #62c5ff 15%,
+    #168cff 40%,
+    #0754b9 65%,
+    #06172e 100%
+  );
+
+  box-shadow:
+    0 0 20px #168cff,
+    0 0 50px #0754b9,
+    0 0 90px rgba(0,140,255,.45);
+
+  position:relative;
+  animation:pulse 3s infinite ease-in-out;
 }
 
-.welcome {
-  text-align: center;
-  margin-bottom: 35px;
+.orb:before,
+.orb:after{
+  content:"";
+  position:absolute;
+  border:2px solid #249cff;
+  border-radius:50%;
 }
 
-.welcome h1 {
-  font-size: 34px;
-  margin-bottom: 10px;
+.orb:before{
+  width:145px;
+  height:65px;
+  transform:rotate(25deg);
 }
 
-.welcome p {
-  color: #8995a8;
+.orb:after{
+  width:160px;
+  height:75px;
+  transform:rotate(-25deg);
 }
 
-/* CHAT BOX */
-
-.chatbox {
-  width: 100%;
-  max-width: 650px;
-  background: #151b26;
-  border: 1px solid #293448;
-  border-radius: 28px;
-  padding: 12px;
-  box-shadow: 0 0 25px rgba(40,140,255,0.08);
+@keyframes pulse{
+  50%{
+    transform:scale(1.06);
+  }
 }
 
-textarea {
-  width: 100%;
-  height: 65px;
-  resize: none;
-  border: none;
-  outline: none;
-  background: transparent;
-  color: white;
-  font-size: 16px;
-  padding: 10px;
+.welcome{
+  text-align:center;
+  margin-top:35px;
+  margin-bottom:30px;
 }
 
-textarea::placeholder {
-  color: #7f8da3;
+.welcome h1{
+  margin:0;
+  font-size:30px;
 }
 
-.actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.welcome p{
+  color:#8995a5;
 }
 
-.left-buttons {
-  display: flex;
-  gap: 8px;
+.chat{
+  width:100%;
+  max-width:680px;
+  background:#171d26;
+  border:1px solid #293341;
+  border-radius:27px;
+  padding:13px;
 }
 
-.icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  border: none;
-  background: #202938;
-  color: white;
-  font-size: 19px;
-  cursor: pointer;
+textarea{
+  width:100%;
+  height:65px;
+  resize:none;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:white;
+  font-size:16px;
+  padding:8px;
 }
 
-.send {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  border: none;
-  background: #1683ff;
-  color: white;
-  font-size: 20px;
-  cursor: pointer;
+textarea::placeholder{
+  color:#7f8b9b;
 }
 
-/* REPLY */
-
-.reply {
-  width: 100%;
-  max-width: 650px;
-  margin-top: 25px;
-  color: #d9e2f0;
-  line-height: 1.6;
+.bottom{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
-/* MENU */
-
-.side-menu {
-  position: fixed;
-  top: 0;
-  right: -280px;
-  width: 280px;
-  height: 100%;
-  background: #111722;
-  border-left: 1px solid #293448;
-  padding: 25px;
-  transition: 0.3s;
-  z-index: 10;
+.tools{
+  display:flex;
+  gap:8px;
 }
 
-.side-menu.open {
-  right: 0;
+.tool,.send{
+  width:43px;
+  height:43px;
+  border-radius:50%;
+  border:0;
+  cursor:pointer;
+  color:white;
+  font-size:18px;
 }
 
-.side-menu h2 {
-  color: #4da6ff;
+.tool{
+  background:#232b37;
 }
 
-.option {
-  padding: 15px;
-  margin: 10px 0;
-  background: #1a2230;
-  border-radius: 15px;
-  cursor: pointer;
+.send{
+  background:#168cff;
 }
 
-.option:hover {
-  background: #243149;
+.reply{
+  width:100%;
+  max-width:680px;
+  margin-top:20px;
+  color:#d9e7f5;
 }
 
-/* FILE PANEL */
-
-.file-panel {
-  display: none;
-  width: 100%;
-  max-width: 650px;
-  margin-top: 20px;
+.side{
+  position:fixed;
+  left:-300px;
+  top:0;
+  width:300px;
+  height:100%;
+  background:#111720;
+  border-right:1px solid #293341;
+  padding:25px;
+  z-index:20;
+  transition:.3s;
 }
 
-.file-panel input {
-  width: 100%;
-  padding: 14px;
-  border-radius: 15px;
-  border: 1px solid #293448;
-  background: #151b26;
-  color: white;
-  outline: none;
+.side.open{
+  left:0;
 }
 
-.file-panel button {
-  margin-top: 10px;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 20px;
-  background: #1683ff;
-  color: white;
+.side h2{
+  color:#65baff;
 }
 
+.item{
+  padding:15px;
+  margin:10px 0;
+  border-radius:15px;
+  background:#1a222e;
+}
+
+.create{
+  display:none;
+  position:absolute;
+  bottom:95px;
+  left:20px;
+  background:#171e28;
+  border:1px solid #303b4a;
+  border-radius:18px;
+  padding:8px;
+  width:190px;
+}
+
+.create div{
+  padding:13px;
+  border-radius:12px;
+}
+
+.feedback{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.7);
+  align-items:center;
+  justify-content:center;
+  z-index:30;
+}
+
+.feedbackBox{
+  width:90%;
+  max-width:400px;
+  background:#151c26;
+  border:1px solid #2b394a;
+  border-radius:22px;
+  padding:25px;
+}
+
+.feedbackBox textarea{
+  height:100px;
+  background:#0c1118;
+  border-radius:14px;
+}
+
+.feedbackBox button{
+  margin-top:10px;
+  padding:12px 20px;
+  border:0;
+  border-radius:20px;
+  background:#168cff;
+  color:white;
+}
 </style>
 </head>
 
 <body>
 
-<!-- TOP -->
-
-<div class="topbar">
-
-  <div class="logo">JARVIS</div>
-
-  <div class="menu" onclick="openMenu()">☰</div>
-
+<div class="top">
+  <div class="brand">JARVIS 45</div>
+  <button class="menuBtn" onclick="toggleSide()">☰</button>
 </div>
-
-
-<!-- MAIN -->
 
 <div class="main">
 
-  <div class="welcome">
-
-    <h1>How can I help you?</h1>
-
-    <p>Your personal AI assistant</p>
-
+  <div class="orb">
+    JARVIS<br>45
   </div>
 
+  <div class="welcome">
+    <h1>How can I help you?</h1>
+    <p>Your personal AI assistant</p>
+  </div>
 
-  <!-- CHAT -->
-
-  <div class="chatbox">
+  <div class="chat">
 
     <textarea
       id="question"
       placeholder="Ask JARVIS..."
     ></textarea>
 
-    <div class="actions">
+    <div class="bottom">
 
-      <div class="left-buttons">
+      <div class="tools">
 
-        <button class="icon" onclick="openFile()">
-          +
-        </button>
+        <button class="tool" onclick="toggleCreate()">＋</button>
 
-        <button class="icon" onclick="voice()">
-          🎙
-        </button>
+        <button class="tool" onclick="voice()">🎙</button>
 
       </div>
 
-      <button class="send" onclick="ask()">
-        ↑
-      </button>
+      <button class="send" onclick="ask()">↑</button>
 
     </div>
 
   </div>
 
-
-  <!-- FILE -->
-
-  <div class="file-panel" id="filePanel">
-
-    <input
-      id="filename"
-      placeholder="Enter file name..."
-    >
-
-    <button onclick="createFile()">
-      Create File
-    </button>
-
-  </div>
-
-
-  <!-- REPLY -->
-
   <div class="reply" id="reply"></div>
 
 </div>
 
+<div class="create" id="create">
 
-<!-- SIDE MENU -->
+  <div onclick="createFile()">📄 Create File</div>
+  <div>📎 Upload File</div>
+  <div>🖼️ Add Image</div>
 
-<div class="side-menu" id="sideMenu">
+</div>
 
-  <h2>JARVIS</h2>
+<div class="side" id="side">
 
-  <div class="option" onclick="openFile()">
-    📄 Create File
+  <h2>JARVIS 45</h2>
+
+  <div class="item">💬 New Chat</div>
+  <div class="item">🕘 Chat History</div>
+  <div class="item">📁 My Files</div>
+  <div class="item">⚙️ Settings</div>
+
+  <div class="item" onclick="showFeedback()">
+    💬 Feedback
   </div>
 
-  <div class="option">
-    💬 New Chat
-  </div>
-
-  <div class="option">
-    📁 My Files
-  </div>
-
-  <div class="option">
-    ⚙️ Settings
-  </div>
-
-  <div class="option" onclick="closeMenu()">
+  <div class="item" onclick="toggleSide()">
     ✕ Close
   </div>
 
 </div>
 
+<div class="feedback" id="feedback">
+
+  <div class="feedbackBox">
+
+    <h2>Send Feedback</h2>
+
+    <textarea
+      id="feedbackText"
+      placeholder="Tell us what you think..."
+    ></textarea>
+
+    <button onclick="sendFeedback()">Send Feedback</button>
+
+    <button onclick="closeFeedback()">
+      Close
+    </button>
+
+  </div>
+
+</div>
 
 <script>
 
-function ask() {
+function ask(){
 
-  const q =
-    document.getElementById("question").value.trim();
+  const q=document.getElementById("question").value.trim();
 
-  const reply =
-    document.getElementById("reply");
-
-  if (!q) {
-    reply.innerText = "Ask me something...";
+  if(!q){
+    document.getElementById("reply").innerText=
+      "Ask JARVIS something...";
     return;
   }
 
-  reply.innerText =
-    "You asked: " + q;
+  document.getElementById("reply").innerText=
+    "You asked: "+q;
 }
 
+function toggleSide(){
 
-function openMenu() {
-
-  document
-    .getElementById("sideMenu")
-    .classList.add("open");
-
-}
-
-
-function closeMenu() {
-
-  document
-    .getElementById("sideMenu")
-    .classList.remove("open");
+  document.getElementById("side")
+    .classList.toggle("open");
 
 }
 
+function toggleCreate(){
 
-function openFile() {
+  const menu=document.getElementById("create");
 
-  closeMenu();
-
-  document
-    .getElementById("filePanel")
-    .style.display = "block";
-
+  menu.style.display=
+    menu.style.display==="block"
+    ? "none"
+    : "block";
 }
 
+function createFile(){
 
-function createFile() {
+  document.getElementById("reply").innerText=
+    "📄 Create File selected.";
 
-  const name =
-    document.getElementById("filename").value.trim();
-
-  const reply =
-    document.getElementById("reply");
-
-  if (!name) {
-
-    reply.innerText =
-      "Enter a file name first.";
-
-    return;
-  }
-
-  reply.innerText =
-    "📄 File created: " + name;
-
+  document.getElementById("create").style.display="none";
 }
 
+function voice(){
 
-function voice() {
+  if(!("webkitSpeechRecognition" in window)){
 
-  if (!("webkitSpeechRecognition" in window)) {
-
-    document.getElementById("reply").innerText =
+    document.getElementById("reply").innerText=
       "Voice recognition is not supported.";
 
     return;
   }
 
-  const recognition =
-    new webkitSpeechRecognition();
+  const recognition=new webkitSpeechRecognition();
 
-  recognition.lang = "en-IN";
+  recognition.lang="en-IN";
 
-  recognition.onresult = function(event) {
+  recognition.onresult=function(event){
 
-    document.getElementById("question").value =
+    document.getElementById("question").value=
       event.results[0][0].transcript;
 
   };
 
   recognition.start();
+}
 
+function showFeedback(){
+
+  document.getElementById("feedback").style.display="flex";
+
+  toggleSide();
+}
+
+function closeFeedback(){
+
+  document.getElementById("feedback").style.display="none";
+}
+
+function sendFeedback(){
+
+  const text=document.getElementById("feedbackText").value.trim();
+
+  if(!text){
+    alert("Please write your feedback.");
+    return;
+  }
+
+  closeFeedback();
+
+  document.getElementById("reply").innerText=
+    "Thanks for your feedback! 💙";
+
+  document.getElementById("feedbackText").value="";
 }
 
 </script>
