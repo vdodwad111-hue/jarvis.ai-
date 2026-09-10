@@ -74,8 +74,6 @@ body:before{
   z-index:2;
 }
 
-/* TOP JARVIS AREA */
-
 .hero{
   flex-shrink:0;
   text-align:center;
@@ -144,7 +142,7 @@ body:before{
 }
 
 .status{
-  margin-top:20px; 
+  margin-top:20px;
 }
 
 .status h1{
@@ -224,9 +222,48 @@ body:before{
   border-bottom-left-radius:5px;
 }
 
-.typing{
-  opacity:.7;
+/* THREE DOT THINKING ANIMATION */
+
+.thinking{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  min-width:58px;
+  padding:12px 15px;
 }
+
+.thinking-dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#4dbfff;
+  box-shadow:0 0 10px #168cff;
+  animation:thinking 1.2s infinite ease-in-out;
+}
+
+.thinking-dot:nth-child(2){
+  animation-delay:.2s;
+}
+
+.thinking-dot:nth-child(3){
+  animation-delay:.4s;
+}
+
+@keyframes thinking{
+  0%,60%,100%{
+    transform:translateY(0);
+    opacity:.35;
+  }
+
+  30%{
+    transform:translateY(-7px);
+    opacity:1;
+    box-shadow:
+      0 0 8px #168cff,
+      0 0 18px #168cff;
+  }
+}
+
 
 /* INPUT BOX */
 
@@ -291,6 +328,7 @@ textarea::placeholder{
   box-shadow:0 0 18px rgba(0,140,255,.45);
 }
 
+
 /* SIDE MENU */
 
 .side{
@@ -322,6 +360,7 @@ textarea::placeholder{
   border-radius:15px;
   background:#0d1724;
 }
+
 
 /* CREATE MENU */
 
@@ -430,15 +469,11 @@ textarea::placeholder{
   </div>
 
 
-  <!-- CHAT MESSAGES -->
-
   <div
     class="reply"
     id="reply">
   </div>
 
-
-  <!-- CHAT BOX AT BOTTOM -->
 
   <div class="chat">
 
@@ -478,8 +513,6 @@ textarea::placeholder{
 </div>
 
 
-<!-- CREATE MENU -->
-
 <div
   class="create"
   id="create">
@@ -498,8 +531,6 @@ textarea::placeholder{
 
 </div>
 
-
-<!-- SIDE MENU -->
 
 <div
   class="side"
@@ -564,13 +595,10 @@ async function ask(){
   input.value = "";
 
 
-  const typing =
-    addMessage(
-      "JARVIS is thinking...",
-      "jarvis"
-    );
+  /* THREE DOT THINKING */
 
-  typing.classList.add("typing");
+  const thinking =
+    addThinking();
 
 
   try{
@@ -607,11 +635,19 @@ async function ask(){
     }
 
 
-    typing.classList.remove("typing");
+    /* REMOVE THINKING DOTS */
 
-    typing.textContent =
+    thinking.remove();
+
+
+    /* SHOW REAL ANSWER */
+
+    addMessage(
       data.reply ||
-      "No response received.";
+      "No response received.",
+      "jarvis"
+    );
+
 
     scrollChat();
 
@@ -620,10 +656,13 @@ async function ask(){
 
     console.error(error);
 
-    typing.classList.remove("typing");
+    thinking.remove();
 
-    typing.textContent =
-      "Sorry, JARVIS couldn't respond.";
+
+    addMessage(
+      "Sorry, JARVIS couldn't respond.",
+      "jarvis"
+    );
 
   }
 
@@ -657,6 +696,45 @@ function addMessage(text,type){
   }
 
   message.textContent = text;
+
+  reply.appendChild(message);
+
+  scrollChat();
+
+  return message;
+}
+
+
+/* THREE DOT THINKING MESSAGE */
+
+function addThinking(){
+
+  const reply =
+    document.getElementById("reply");
+
+  const message =
+    document.createElement("div");
+
+  message.classList.add(
+    "message",
+    "jarvis-message",
+    "thinking"
+  );
+
+
+  for(let i = 0; i < 3; i++){
+
+    const dot =
+      document.createElement("span");
+
+    dot.classList.add(
+      "thinking-dot"
+    );
+
+    message.appendChild(dot);
+
+  }
+
 
   reply.appendChild(message);
 
