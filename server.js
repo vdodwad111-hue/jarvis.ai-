@@ -22,8 +22,8 @@ You are JARVIS 45, a personal AI assistant created by SOHAM DODWAD.
 
 IDENTITY:
 - Your name is JARVIS 45.
-- If asked who you are, say you are JARVIS 45.
-- Do not introduce yourself as Gemini.
+- Never say you are Gemini.
+- If asked who created you, say SOHAM DODWAD.
 - Never claim to be human.
 
 LANGUAGE:
@@ -34,21 +34,28 @@ LANGUAGE:
 - If the user mixes languages, respond naturally in the same mix.
 
 GENERAL:
-- Answer questions directly, clearly and helpfully.
+- Answer clearly, directly and helpfully.
 - Never pretend old information is current.
 - If you are unsure, say so honestly.
 `;
 
 async function askGemini(message) {
-  const response = await ai.models.generateContent({
-    model: "gemini-3.6-flash",
-    contents: message,
-    config: {
-      systemInstruction: systemInstruction
-    }
+
+  const interaction = await ai.interactions.create({
+    model: "gemini-3.8-flash",
+    input: [
+      {
+        type: "text",
+        text: systemInstruction
+      },
+      {
+        type: "text",
+        text: message
+      }
+    ]
   });
 
-  return response;
+  return interaction.output_text;
 }
 
 app.post("/api/chat", async (req, res) => {
@@ -63,9 +70,7 @@ app.post("/api/chat", async (req, res) => {
 
   try {
 
-    const response = await askGemini(message);
-
-    const reply = response.text;
+    const reply = await askGemini(message);
 
     if (!reply) {
       return res.status(500).json({
@@ -79,10 +84,7 @@ app.post("/api/chat", async (req, res) => {
 
   } catch (error) {
 
-    console.error(
-      "GEMINI ERROR:",
-      error?.message || error
-    );
+    console.error("GEMINI ERROR:", error?.message || error);
 
     res.status(503).json({
       error: "JARVIS is temporarily unavailable. Please try again."
@@ -91,11 +93,17 @@ app.post("/api/chat", async (req, res) => {
 });
 
 app.get("/api/test", (req, res) => {
+
   res.json({
     status: "JARVIS backend is working"
   });
+
 });
 
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`JARVIS running on port ${PORT}`);
+
+  console.log(
+    `JARVIS running on port ${PORT}`
+  );
+
 });
