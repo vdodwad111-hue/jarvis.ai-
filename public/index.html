@@ -627,7 +627,29 @@ async function ask(){
           })
         }
       );
+/* JARVIS VOICE OUTPUT */
 
+const replyText =
+  data.reply ||
+  "No response received.";
+
+if ("speechSynthesis" in window) {
+
+  window.speechSynthesis.cancel();
+
+  const speech =
+    new SpeechSynthesisUtterance(
+      replyText
+    );
+
+  speech.lang = "en-IN";
+  speech.rate = 1;
+  speech.pitch = 1;
+
+  window.speechSynthesis.speak(
+    speech
+  );
+  }
 
     const data =
       await res.json();
