@@ -832,53 +832,89 @@ function createFile(){
 
 /* VOICE */
 
+/* VOICE */
+
 function voice(){
 
-  if(
-    !("webkitSpeechRecognition"
-      in window)
-  ){
+  const input =
+    document.getElementById("question");
 
+  if(!input){
     addMessage(
-      "Voice recognition is not supported.",
+      "❌ Voice input field not found.",
       "jarvis"
     );
+    return;
+  }
 
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  if(!SpeechRecognition){
+    addMessage(
+      "❌ Voice recognition is not available in this browser. Please open JARVIS in Google Chrome.",
+      "jarvis"
+    );
     return;
   }
 
   const recognition =
-    new webkitSpeechRecognition();
+    new SpeechRecognition();
 
-  recognition.lang =
-    "en-IN";
+  recognition.lang = "en-IN";
+  recognition.continuous = false;
+  recognition.interimResults = false;
 
-  recognition.onstart =
-    function(){
+  recognition.onstart = function(){
 
-      addMessage(
-        "🎙️ Listening...",
-        "jarvis"
-      );
+    addMessage(
+      "🎙️ Listening... Speak now.",
+      "jarvis"
+    );
 
-    };
+  };
 
-  recognition.onresult =
-    function(event){
+  recognition.onresult = function(event){
 
-      document
-        .getElementById("question")
-        .value =
-          event
-          .results[0][0]
-          .transcript;
+    const text =
+      event.results[0][0].transcript;
 
-    };
+    input.value = text;
 
-  recognition.start();
+    ask();
+
+  };
+
+  recognition.onerror = function(event){
+
+    addMessage(
+      "❌ Voice error: " + event.error,
+      "jarvis"
+    );
+
+  };
+
+  recognition.onend = function(){
+
+    console.log("Voice recognition ended");
+
+  };
+
+  try{
+
+    recognition.start();
+
+  }catch(error){
+
+    addMessage(
+      "❌ Could not start voice recognition. Please try again.",
+      "jarvis"
+    );
+
+  }
 
 }
-
 </script>
 
 </body>
