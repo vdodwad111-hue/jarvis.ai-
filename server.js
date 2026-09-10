@@ -49,11 +49,11 @@ async function askGemini(message) {
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
       const response = await ai.models.generateContent({
-        model: "gemini-3.7-flash",
+        
         contents: message,
         config: {
           systemInstruction: systemInstruction,
-          
+          model: "gemini-2.5-flash",
         }
       });
 
