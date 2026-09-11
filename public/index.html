@@ -1,707 +1,110 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JARVIS 45</title>
-
-<style>
-*{
-  box-sizing:border-box;
-}
-
-body{
-  margin:0;
-  height:100vh;
-  background:#030711;
-  color:#fff;
-  font-family:Arial,sans-serif;
-  overflow:hidden;
-}
-
-body:before{
-  content:"";
-  position:fixed;
-  inset:-50%;
-  background:
-    radial-gradient(circle at 50% 45%,rgba(0,140,255,.18),transparent 25%),
-    radial-gradient(circle at 20% 80%,rgba(0,80,255,.10),transparent 25%),
-    radial-gradient(circle at 80% 20%,rgba(0,190,255,.08),transparent 25%);
-  animation:bg 10s linear infinite;
-  pointer-events:none;
-}
-
-@keyframes bg{
-  50%{
-    transform:rotate(8deg) scale(1.08);
-  }
-}
-
-.top{
-  height:70px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 20px;
-  position:relative;
-  z-index:5;
-}
-
-.logo{
-  font-size:21px;
-  font-weight:800;
-  letter-spacing:2px;
-  color:#67c7ff;
-  text-shadow:0 0 15px #168cff;
-}
-
-.menu{
-  width:44px;
-  height:44px;
-  border:1px solid #263b55;
-  border-radius:14px;
-  background:rgba(15,27,42,.7);
-  color:#fff;
-  font-size:22px;
-}
-
-.main{
-  height:calc(100vh - 70px);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  position:relative;
-  z-index:2;
-}
-
-.hero{
-  flex-shrink:0;
-  text-align:center;
-  padding-top:20px;
-}
-
-.core{
-  width:125px;
-  height:125px;
-  margin:auto;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  font-size:17px;
-  font-weight:bold;
-  letter-spacing:2px;
-
-  background:
-    radial-gradient(circle at 35% 30%,
-    #fff 0%,
-    #a7e8ff 8%,
-    #20aaff 25%,
-    #0868d9 48%,
-    #031a3d 72%,
-    #020817 100%);
-
-  box-shadow:
-    0 0 20px #168cff,
-    0 0 60px rgba(0,130,255,.8),
-    0 0 120px rgba(0,100,255,.35);
-
-  position:relative;
-  animation:core 3s ease-in-out infinite;
-}
-
-.core:before,
-.core:after{
-  content:"";
-  position:absolute;
-  border:1px solid rgba(70,190,255,.8);
-  border-radius:50%;
-}
-
-.core:before{
-  width:170px;
-  height:65px;
-  transform:rotate(25deg);
-}
-
-.core:after{
-  width:185px;
-  height:70px;
-  transform:rotate(-25deg);
-}
-
-@keyframes core{
-  0%,100%{
-    transform:translateY(0) scale(1);
-  }
-
-  25%{
-    transform:translateY(-4px) scale(1.03);
-  }
-
-  50%{
-    transform:translateY(-12px) scale(1.08);
-  }
-
-  75%{
-    transform:translateY(-4px) scale(1.03);
-  }
-}
-
-.status{
-  margin-top:20px;
-}
-
-.status h1{
-  margin:0;
-  font-size:28px;
-}
-
-.status p{
-  margin:8px 0 0;
-  color:#72839a;
-  font-size:13px;
-}
-
-.online{
-  display:inline-flex;
-  align-items:center;
-  gap:7px;
-  margin-top:8px;
-  color:#6fc9ff;
-  font-size:12px;
-}
-
-.dot{
-  width:8px;
-  height:8px;
-  border-radius:50%;
-  background:#32b8ff;
-  box-shadow:0 0 12px #32b8ff;
-}
-
-/* MESSAGES */
-
-.reply{
-  width:min(700px,92%);
-  flex:1;
-  min-height:0;
-  margin-top:15px;
-  padding:8px 4px;
-  overflow-y:auto;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  scroll-behavior:smooth;
-}
-
-.reply::-webkit-scrollbar{
-  width:5px;
-}
-
-.reply::-webkit-scrollbar-thumb{
-  background:#263b55;
-  border-radius:10px;
-}
-
-.message{
-  max-width:82%;
-  padding:12px 15px;
-  border-radius:18px;
-  line-height:1.45;
-  white-space:pre-wrap;
-  word-wrap:break-word;
-  font-size:15px;
-}
-
-.user-message{
-  align-self:flex-end;
-  background:#168cff;
-  color:#fff;
-  border-bottom-right-radius:5px;
-}
-
-.jarvis-message{
-  align-self:flex-start;
-  background:#101b2a;
-  color:#cfe8ff;
-  border:1px solid #263b55;
-  border-bottom-left-radius:5px;
-}
-
-/* THREE DOT THINKING ANIMATION */
-
-.thinking{
-  display:flex;
-  align-items:center;
-  gap:5px;
-  min-width:58px;
-  padding:12px 15px;
-}
-
-.thinking-dot{
-  width:7px;
-  height:7px;
-  border-radius:50%;
-  background:#4dbfff;
-  box-shadow:0 0 10px #168cff;
-  animation:thinking 1.2s infinite ease-in-out;
-}
-
-.thinking-dot:nth-child(2){
-  animation-delay:.2s;
-}
-
-.thinking-dot:nth-child(3){
-  animation-delay:.4s;
-}
-
-@keyframes thinking{
-  0%,60%,100%{
-    transform:translateY(0);
-    opacity:.35;
-  }
-
-  30%{
-    transform:translateY(-7px);
-    opacity:1;
-    box-shadow:
-      0 0 8px #168cff,
-      0 0 18px #168cff;
-  }
-}
-
-
-/* INPUT BOX */
-
-.chat{
-  width:min(700px,92%);
-  flex-shrink:0;
-  margin:10px 0 15px;
-  padding:14px;
-  border:1px solid #24364d;
-  border-radius:25px;
-  background:rgba(12,20,32,.94);
-  box-shadow:0 0 30px rgba(0,0,0,.5);
-  backdrop-filter:blur(20px);
-}
-
-.chat:focus-within{
-  border-color:#168cff;
-  box-shadow:0 0 30px rgba(0,140,255,.18);
-}
-
-textarea{
-  width:100%;
-  height:55px;
-  border:0;
-  outline:0;
-  resize:none;
-  background:transparent;
-  color:#fff;
-  font-size:16px;
-  padding:8px;
-}
-
-textarea::placeholder{
-  color:#65758b;
-}
-
-.controls{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.tools{
-  display:flex;
-  gap:9px;
-}
-
-.btn{
-  width:42px;
-  height:42px;
-  border:1px solid #263b55;
-  border-radius:50%;
-  background:#101b2a;
-  color:#fff;
-  font-size:18px;
-  cursor:pointer;
-}
-
-.send{
-  background:#168cff;
-  border:0;
-  box-shadow:0 0 18px rgba(0,140,255,.45);
-}
-
-
-/* SIDE MENU */
-
-.side{
-  position:fixed;
-  top:0;
-  left:-310px;
-  width:300px;
-  height:100%;
-  padding:25px;
-  background:rgba(5,12,22,.97);
-  border-right:1px solid #263b55;
-  z-index:20;
-  transition:.35s ease;
-}
-
-.side.open{
-  left:0;
-}
-
-.side h2{
-  color:#65c5ff;
-  letter-spacing:2px;
-}
-
-.item{
-  padding:15px;
-  margin:10px 0;
-  border:1px solid #1d2d42;
-  border-radius:15px;
-  background:#0d1724;
-}
-
-
-/* CREATE MENU */
-
-.create{
-  display:none;
-  position:fixed;
-  bottom:85px;
-  left:15px;
-  width:190px;
-  padding:8px;
-  border:1px solid #263b55;
-  border-radius:18px;
-  background:#0d1725;
-  z-index:15;
-}
-
-.create div{
-  padding:13px;
-  border-radius:12px;
-}
-
-@media(max-width:600px){
-
-  .hero{
-    padding-top:12px;
-  }
-
-  .core{
-    width:100px;
-    height:100px;
-    font-size:15px;
-  }
-
-  .core:before{
-    width:140px;
-    height:55px;
-  }
-
-  .core:after{
-    width:155px;
-    height:60px;
-  }
-
-  .status{
-    margin-top:15px;
-  }
-
-  .status h1{
-    font-size:23px;
-  }
-
-  .status p{
-    font-size:11px;
-  }
-
-  .reply{
-    width:92%;
-  }
-
-  .chat{
-    width:92%;
-    border-radius:21px;
-  }
-}
-</style>
-</head>
-
-<body>
-
-<div class="top">
-
-  <div class="logo">
-    JARVIS 45
-  </div>
-
-  <button class="menu" onclick="toggleSide()">
-    ☰
-  </button>
-
-</div>
-
-
-<div class="main">
-
-  <div class="hero">
-
-    <div class="core">
-      JARVIS<br>45
-    </div>
-
-    <div class="status">
-
-      <h1>Hello, I Am JARVIS</h1>
-
-      <p>
-        Founded &amp; Developed by SOHAM DODWAD
-      </p>
-
-      <div class="online">
-        <span class="dot"></span>
-        SYSTEM ONLINE
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <div
-    class="reply"
-    id="reply">
-  </div>
-
-
-  <div class="chat">
-
-    <textarea
-      id="question"
-      placeholder="Ask JARVIS anything..."
-    ></textarea>
-
-    <div class="controls">
-
-      <div class="tools">
-
-        <button
-          class="btn"
-          onclick="toggleCreate()">
-          ＋
-        </button>
-
-        <button
-          class="btn"
-          onclick="voice()">
-          🎙
-        </button>
-
-      </div>
-
-      <button
-        class="btn send"
-        onclick="ask()">
-        ↑
-      </button>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-<div
-  class="create"
-  id="create">
-
-  <div onclick="createFile()">
-    📄 Create File
-  </div>
-
-  <div>
-    📎 Upload File
-  </div>
-
-  <div>
-    🖼️ Add Image
-  </div>
-
-</div>
-
-
-<div
-  class="side"
-  id="side">
-
-  <h2>JARVIS 45</h2>
-
-  <div class="item">
-    ＋ New Chat
-  </div>
-
-  <div class="item">
-    🕘 Chat History
-  </div>
-
-  <div class="item">
-    📁 My Files
-  </div>
-
-  <div class="item">
-    ⚙️ Settings
-  </div>
-
-  <div class="item">
-    💬 Feedback
-  </div>
-
-  <div
-    class="item"
-    onclick="toggleSide()">
-    ✕ Close
-  </div>
-
-</div>
-
-
 <script>
 
-/* ASK */
+/* =========================
+   ASK JARVIS
+========================= */
 
 async function ask(){
 
-  const input =
-    document.getElementById("question");
-
-  const q =
-    input.value.trim();
+  const input = document.getElementById("question");
+  const q = input.value.trim();
 
   if(!q){
-
     addMessage(
       "I'm listening... Ask me something.",
       "jarvis"
     );
-
     return;
   }
 
-
-  addMessage(q,"user");
-
+  addMessage(q, "user");
   input.value = "";
 
-
-  /* THREE DOT THINKING */
-
-  const thinking =
-    addThinking();
-
+  const thinking = addThinking();
 
   try{
 
-    const res =
-      await fetch(
-        "/api/chat",
-        {
-          method:"POST",
+    const res = await fetch("/api/chat", {
+      method: "POST",
 
-          headers:{
-            "Content-Type":
-              "application/json"
-          },
+      headers: {
+        "Content-Type": "application/json"
+      },
 
-          body:JSON.stringify({
-            message:q
-          })
-        }
-      );
-/* JARVIS VOICE OUTPUT */
+      body: JSON.stringify({
+        message: q
+      })
+    });
 
-const replyText =
-  data.reply ||
-  "No response received.";
+    /* GET RESPONSE FIRST */
 
-if ("speechSynthesis" in window) {
-
-  window.speechSynthesis.cancel();
-
-  const speech =
-    new SpeechSynthesisUtterance(
-      replyText
-    );
-
-  speech.lang = "en-IN";
-  speech.rate = 1;
-  speech.pitch = 1;
-
-  window.speechSynthesis.speak(
-    speech
-  );
-  }
-
-    const data =
-      await res.json();
-
+    const data = await res.json();
 
     if(!res.ok){
-
       throw new Error(
-        data.error ||
-        "Request failed"
+        data.error || "Request failed"
       );
-
     }
-
 
     /* REMOVE THINKING DOTS */
 
     thinking.remove();
 
+    /* SHOW JARVIS RESPONSE */
 
-    /* SHOW REAL ANSWER */
+    const replyText =
+      data.reply ||
+      "No response received.";
 
     addMessage(
-      data.reply ||
-      "No response received.",
+      replyText,
       "jarvis"
     );
 
+    /* VOICE OUTPUT */
+
+    if("speechSynthesis" in window){
+
+      window.speechSynthesis.cancel();
+
+      const speech =
+        new SpeechSynthesisUtterance(
+          replyText
+        );
+
+      speech.lang = "en-IN";
+      speech.rate = 1;
+      speech.pitch = 1;
+
+      window.speechSynthesis.speak(
+        speech
+      );
+    }
 
     scrollChat();
 
-
   }catch(error){
 
-    console.error(error);
+    console.error(
+      "JARVIS FRONTEND ERROR:",
+      error
+    );
 
     thinking.remove();
-
 
     addMessage(
       "Sorry, JARVIS couldn't respond.",
       "jarvis"
     );
-
   }
-
 }
 
 
-/* ADD MESSAGE */
+/* =========================
+   ADD MESSAGE
+========================= */
 
-function addMessage(text,type){
+function addMessage(text, type){
 
   const reply =
     document.getElementById("reply");
@@ -722,7 +125,6 @@ function addMessage(text,type){
     message.classList.add(
       "jarvis-message"
     );
-
   }
 
   message.textContent = text;
@@ -735,7 +137,9 @@ function addMessage(text,type){
 }
 
 
-/* THREE DOT THINKING MESSAGE */
+/* =========================
+   THREE DOT THINKING
+========================= */
 
 function addThinking(){
 
@@ -751,7 +155,6 @@ function addThinking(){
     "thinking"
   );
 
-
   for(let i = 0; i < 3; i++){
 
     const dot =
@@ -762,9 +165,7 @@ function addThinking(){
     );
 
     message.appendChild(dot);
-
   }
-
 
   reply.appendChild(message);
 
@@ -774,7 +175,9 @@ function addThinking(){
 }
 
 
-/* SCROLL */
+/* =========================
+   SCROLL
+========================= */
 
 function scrollChat(){
 
@@ -783,11 +186,12 @@ function scrollChat(){
 
   reply.scrollTop =
     reply.scrollHeight;
-
 }
 
 
-/* ENTER */
+/* =========================
+   ENTER TO SEND
+========================= */
 
 document
   .getElementById("question")
@@ -803,14 +207,14 @@ document
         event.preventDefault();
 
         ask();
-
       }
-
     }
   );
 
 
-/* SIDE */
+/* =========================
+   SIDE MENU
+========================= */
 
 function toggleSide(){
 
@@ -818,11 +222,12 @@ function toggleSide(){
     .getElementById("side")
     .classList
     .toggle("open");
-
 }
 
 
-/* CREATE */
+/* =========================
+   CREATE MENU
+========================= */
 
 function toggleCreate(){
 
@@ -833,7 +238,6 @@ function toggleCreate(){
     menu.style.display === "block"
     ? "none"
     : "block";
-
 }
 
 
@@ -848,36 +252,29 @@ function createFile(){
     .getElementById("create")
     .style.display =
       "none";
-
 }
 
 
-/* VOICE */
-
-/* VOICE */
+/* =========================
+   VOICE INPUT
+========================= */
 
 function voice(){
 
   const input =
     document.getElementById("question");
 
-  if(!input){
-    addMessage(
-      "❌ Voice input field not found.",
-      "jarvis"
-    );
-    return;
-  }
-
   const SpeechRecognition =
     window.SpeechRecognition ||
     window.webkitSpeechRecognition;
 
   if(!SpeechRecognition){
+
     addMessage(
-      "❌ Voice recognition is not available in this browser. Please open JARVIS in Google Chrome.",
+      "❌ Voice recognition is not available. Please use Google Chrome.",
       "jarvis"
     );
+
     return;
   }
 
@@ -894,7 +291,6 @@ function voice(){
       "🎙️ Listening... Speak now.",
       "jarvis"
     );
-
   };
 
   recognition.onresult = function(event){
@@ -905,22 +301,22 @@ function voice(){
     input.value = text;
 
     ask();
-
   };
 
   recognition.onerror = function(event){
 
     addMessage(
-      "❌ Voice error: " + event.error,
+      "❌ Voice error: " +
+      event.error,
       "jarvis"
     );
-
   };
 
   recognition.onend = function(){
 
-    console.log("Voice recognition ended");
-
+    console.log(
+      "Voice recognition ended"
+    );
   };
 
   try{
@@ -933,13 +329,9 @@ function voice(){
       "❌ Could not start voice recognition. Please try again.",
       "jarvis"
     );
-
   }
-
 }
-</script>
 
-</body>
-  </html>
+                  </script>
 
 
