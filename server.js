@@ -15,9 +15,15 @@ if (!geminiKey && !openRouterKey) {
   process.exit(1);
 }
 
-const ai = geminiKey ? new GoogleGenAI({
-  apiKey: geminiKey
-}) : null;
+const ai = geminiKey
+  ? new GoogleGenAI({
+      apiKey: geminiKey
+    })
+  : null;
+
+/* =========================
+   JARVIS IDENTITY
+========================= */
 
 const systemInstruction = `
 You are JARVIS 45, a personal AI assistant created by SOHAM DODWAD.
@@ -27,6 +33,7 @@ If asked who created you, say SOHAM DODWAD.
 Never claim to be human.
 
 Answer in the same language as the user.
+
 Support English, Marathi, Hindi, Kannada, Tamil, Telugu,
 Malayalam, Punjabi, Bengali, Gujarati, Assamese, Odia,
 Urdu, Nepali, Konkani, Sanskrit and other languages you understand.
@@ -38,17 +45,31 @@ If you are unsure, say so honestly.
 `;
 
 /* =========================
+   CHAT MEMORY
+========================= */
+
+const sessions = new Map();
+
+function getHistory(sessionId) {
+  if (!sessions.has(sessionId)) {
+    sessions.set(sessionId, []);
+  }
+
+  return sessions.get(sessionId);
+}
+
+/* =========================
    GEMINI
 ========================= */
 
-async function askGemini(message) {
+async function askGemini(history) {
   if (!ai) {
     throw new Error("Gemini key is not configured");
   }
 
   const response = await ai.models.generateContent({
     model: "gemini-3.1-flash-lite",
-    contents: message,
+    contents: history,
     config: {
       systemInstruction: systemInstruction,
       tools: [
@@ -66,33 +87,37 @@ async function askGemini(message) {
    OPENROUTER BACKUP
 ========================= */
 
-async function askOpenRouter(message) {
+async function askOpenRouter(history) {
   if (!openRouterKey) {
     throw new Error("OpenRouter key is not configured");
   }
+
+  const messages = [
+    {
+      role: "system",
+      content: systemInstruction
+    },
+    ...history.map((item) => ({
+      role: item.role === "model" ? "assistant" : "user",
+      content: item.parts?.[0]?.text || ""
+    }))
+  ];
 
   const response = await fetch(
     "https://openrouter.ai/api/v1/chat/completions",
     {
       method: "POST",
+
       headers: {
         "Authorization": `Bearer ${openRouterKey}`,
         "Content-Type": "application/json",
         "HTTP-Referer": "https://jarvis-ai-soham.up.railway.app",
         "X-Title": "JARVIS 45"
       },
+
       body: JSON.stringify({
         model: "openrouter/free",
-        messages: [
-          {
-            role: "system",
-            content: systemInstruction
-          },
-          {
-            role: "user",
-            content: message
-          }
-        ]
+        messages: messages
       })
     }
   );
@@ -117,41 +142,99 @@ async function askOpenRouter(message) {
 app.post("/api/chat", async (req, res) => {
   const message = req.body?.message?.trim();
 
+  const sessionId =
+    req.body?.sessionId || "default";
+
+  const history = getHistory(sessionId);
+
   if (!message) {
     return res.status(400).json({
       error: "Please enter a message."
     });
   }
 
-  /* Try Gemini first */
+  /* Add user message to memory */
+
+  history.push({
+    role: "user",
+    parts: [
+      {
+        text: message
+      }
+    ]
+  });
+
+  /* Keep last 20 messages */
+
+  if (history.length > 20) {
+    history.splice(
+      0,
+      history.length - 20
+    );
+  }
+
+  /* =========================
+     TRY GEMINI FIRST
+  ========================= */
+
   try {
     console.log("JARVIS: Trying Gemini...");
 
-    const reply = await askGemini(message);
+    const reply = await askGemini(history);
 
     if (reply) {
-      console.log("JARVIS: Gemini response received.");
+      console.log(
+        "JARVIS: Gemini response received."
+      );
+
+      history.push({
+        role: "model",
+        parts: [
+          {
+            text: reply
+          }
+        ]
+      });
 
       return res.json({
         reply: reply,
         provider: "gemini"
       });
     }
+
   } catch (error) {
+
     console.error(
       "GEMINI FAILED:",
       error?.message || error
     );
   }
 
-  /* Gemini failed → OpenRouter backup */
-  try {
-    console.log("JARVIS: Switching to backup AI...");
+  /* =========================
+     GEMINI FAILED → BACKUP AI
+  ========================= */
 
-    const reply = await askOpenRouter(message);
+  try {
+    console.log(
+      "JARVIS: Switching to backup AI..."
+    );
+
+    const reply =
+      await askOpenRouter(history);
 
     if (reply) {
-      console.log("JARVIS: Backup AI response received.");
+      console.log(
+        "JARVIS: Backup AI response received."
+      );
+
+      history.push({
+        role: "model",
+        parts: [
+          {
+            text: reply
+          }
+        ]
+      });
 
       return res.json({
         reply: reply,
@@ -159,16 +242,20 @@ app.post("/api/chat", async (req, res) => {
       });
     }
 
-    throw new Error("Backup AI returned empty response.");
+    throw new Error(
+      "Backup AI returned empty response."
+    );
 
   } catch (error) {
+
     console.error(
       "BACKUP AI FAILED:",
       error?.message || error
     );
 
     return res.status(503).json({
-      error: "All AI services are temporarily unavailable."
+      error:
+        "All AI services are temporarily unavailable."
     });
   }
 });
@@ -190,5 +277,7 @@ app.get("/api/test", (req, res) => {
 ========================= */
 
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`JARVIS running on port ${PORT}`);
+  console.log(
+    `JARVIS running on port ${PORT}`
+  );
 });
