@@ -4,7 +4,7 @@ const { GoogleGenAI } = require("@google/genai");
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
 app.use(express.static("public"));
 
 const apiKey = process.env.GEMINI_API_KEY;
@@ -16,6 +16,11 @@ if (!apiKey) {
 const ai = new GoogleGenAI({
   apiKey: apiKey
 });
+
+
+/* =========================
+   JARVIS PERSONALITY
+========================= */
 
 const systemInstruction = `
 You are JARVIS 45, a personal AI assistant created by SOHAM DODWAD.
@@ -36,74 +41,120 @@ LANGUAGE:
 GENERAL:
 - Answer clearly, directly and helpfully.
 - Never pretend old information is current.
+- For current or latest information, use search when available.
 - If you are unsure, say so honestly.
 `;
+
+
+/* =========================
+   CORE AI
+========================= */
 
 async function askGemini(message) {
 
   const interaction = await ai.interactions.create({
+
     model: "gemini-3.8-flash",
-    input: [
+
+    input: message,
+
+    system_instruction: systemInstruction,
+
+    tools: [
       {
-        type: "text",
-        text: systemInstruction
-      },
-      {
-        type: "text",
-        text: message
+        type: "google_search"
       }
     ]
+
   });
 
   return interaction.output_text;
 }
 
+
+/* =========================
+   CHAT API
+========================= */
+
 app.post("/api/chat", async (req, res) => {
 
-  const message = req.body?.message?.trim();
+  const message =
+    req.body?.message?.trim();
 
   if (!message) {
+
     return res.status(400).json({
       error: "Please enter a message."
     });
+
   }
+
 
   try {
 
-    const reply = await askGemini(message);
+    const reply =
+      await askGemini(message);
+
 
     if (!reply) {
+
       return res.status(500).json({
-        error: "JARVIS could not generate a response."
+        error:
+          "JARVIS could not generate a response."
       });
+
     }
 
-    res.json({
+
+    return res.json({
       reply: reply
     });
 
+
   } catch (error) {
 
-    console.error("GEMINI ERROR:", error?.message || error);
+    console.error(
+      "JARVIS CHAT ERROR:",
+      error?.message || error
+    );
 
-    res.status(503).json({
-      error: "JARVIS is temporarily unavailable. Please try again."
+
+    return res.status(503).json({
+      error:
+        "JARVIS is temporarily unavailable. Please try again."
     });
+
   }
+
 });
+
+
+/* =========================
+   HEALTH CHECK
+========================= */
 
 app.get("/api/test", (req, res) => {
 
-  res.json({
-    status: "JARVIS backend is working"
+  return res.json({
+    status:
+      "JARVIS backend is working"
   });
 
 });
 
-app.listen(PORT, "0.0.0.0", () => {
 
-  console.log(
-    `JARVIS running on port ${PORT}`
-  );
+/* =========================
+   SERVER START
+========================= */
 
-});
+app.listen(
+  PORT,
+  "0.0.0.0",
+  () => {
+
+    console.log(
+      `JARVIS running on port ${PORT}`
+    );
+
+  }
+);
