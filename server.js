@@ -16,9 +16,7 @@ if (!geminiKey && !openRouterKey) {
 }
 
 const ai = geminiKey
-  ? new GoogleGenAI({
-      apiKey: geminiKey
-    })
+  ? new GoogleGenAI({ apiKey: geminiKey })
   : null;
 
 /* =========================
@@ -63,15 +61,19 @@ function getHistory(sessionId) {
 ========================= */
 
 async function askGemini(history) {
+
   if (!ai) {
     throw new Error("Gemini key is not configured");
   }
 
   const response = await ai.models.generateContent({
     model: "gemini-3.1-flash-lite",
+
     contents: history,
+
     config: {
       systemInstruction: systemInstruction,
+
       tools: [
         {
           googleSearch: {}
@@ -88,6 +90,7 @@ async function askGemini(history) {
 ========================= */
 
 async function askOpenRouter(history) {
+
   if (!openRouterKey) {
     throw new Error("OpenRouter key is not configured");
   }
@@ -97,9 +100,15 @@ async function askOpenRouter(history) {
       role: "system",
       content: systemInstruction
     },
+
     ...history.map((item) => ({
-      role: item.role === "model" ? "assistant" : "user",
-      content: item.parts?.[0]?.text || ""
+      role:
+        item.role === "model"
+          ? "assistant"
+          : "user",
+
+      content:
+        item.parts?.[0]?.text || ""
     }))
   ];
 
@@ -109,10 +118,17 @@ async function askOpenRouter(history) {
       method: "POST",
 
       headers: {
-        "Authorization": `Bearer ${openRouterKey}`,
-        "Content-Type": "application/json",
-        "HTTP-Referer": "https://jarvis-ai-soham.up.railway.app",
-        "X-Title": "JARVIS 45"
+        "Authorization":
+          `Bearer ${openRouterKey}`,
+
+        "Content-Type":
+          "application/json",
+
+        "HTTP-Referer":
+          "https://jarvis-ai-soham.up.railway.app",
+
+        "X-Title":
+          "JARVIS 45"
       },
 
       body: JSON.stringify({
@@ -125,9 +141,11 @@ async function askOpenRouter(history) {
   const data = await response.json();
 
   if (!response.ok) {
+
     throw new Error(
       `OpenRouter ${response.status}: ${
-        data?.error?.message || "Unknown error"
+        data?.error?.message ||
+        "Unknown error"
       }`
     );
   }
@@ -136,27 +154,32 @@ async function askOpenRouter(history) {
 }
 
 /* =========================
-   CHAT API
+   CHAT
 ========================= */
 
 app.post("/api/chat", async (req, res) => {
-  const message = req.body?.message?.trim();
+
+  const message =
+    req.body?.message?.trim();
 
   const sessionId =
-    req.body?.sessionId || "default";
+    req.body?.sessionId ||
+    "default";
 
-  const history = getHistory(sessionId);
+  const history =
+    getHistory(sessionId);
 
   if (!message) {
+
     return res.status(400).json({
-      error: "Please enter a message."
+      error:
+        "Please enter a message."
     });
   }
 
-  /* Add user message to memory */
-
   history.push({
     role: "user",
+
     parts: [
       {
         text: message
@@ -164,31 +187,34 @@ app.post("/api/chat", async (req, res) => {
     ]
   });
 
-  /* Keep last 20 messages */
-
   if (history.length > 20) {
+
     history.splice(
       0,
       history.length - 20
     );
   }
 
-  /* =========================
-     TRY GEMINI FIRST
-  ========================= */
+  /* GEMINI */
 
   try {
-    console.log("JARVIS: Trying Gemini...");
 
-    const reply = await askGemini(history);
+    console.log(
+      "JARVIS: Trying Gemini..."
+    );
+
+    const reply =
+      await askGemini(history);
 
     if (reply) {
+
       console.log(
         "JARVIS: Gemini response received."
       );
 
       history.push({
         role: "model",
+
         parts: [
           {
             text: reply
@@ -210,11 +236,10 @@ app.post("/api/chat", async (req, res) => {
     );
   }
 
-  /* =========================
-     GEMINI FAILED → BACKUP AI
-  ========================= */
+  /* OPENROUTER */
 
   try {
+
     console.log(
       "JARVIS: Switching to backup AI..."
     );
@@ -223,12 +248,14 @@ app.post("/api/chat", async (req, res) => {
       await askOpenRouter(history);
 
     if (reply) {
+
       console.log(
         "JARVIS: Backup AI response received."
       );
 
       history.push({
         role: "model",
+
         parts: [
           {
             text: reply
@@ -261,14 +288,79 @@ app.post("/api/chat", async (req, res) => {
 });
 
 /* =========================
+   NEW CHAT
+========================= */
+
+app.post("/api/new-chat", (req, res) => {
+
+  const sessionId =
+    req.body?.sessionId;
+
+  if (sessionId) {
+    sessions.delete(sessionId);
+  }
+
+  res.json({
+    success: true,
+    message: "New chat started."
+  });
+});
+
+/* =========================
+   MEMORY STATUS
+========================= */
+
+app.post("/api/memory", (req, res) => {
+
+  const sessionId =
+    req.body?.sessionId;
+
+  const history =
+    sessionId
+      ? sessions.get(sessionId) || []
+      : [];
+
+  res.json({
+    enabled: true,
+    messages: history.length
+  });
+});
+
+/* =========================
+   CLEAR MEMORY
+========================= */
+
+app.post("/api/memory/clear", (req, res) => {
+
+  const sessionId =
+    req.body?.sessionId;
+
+  if (sessionId) {
+    sessions.delete(sessionId);
+  }
+
+  res.json({
+    success: true,
+    message:
+      "JARVIS memory cleared."
+  });
+});
+
+/* =========================
    HEALTH CHECK
 ========================= */
 
 app.get("/api/test", (req, res) => {
+
   res.json({
-    status: "JARVIS backend is working",
-    gemini: !!geminiKey,
-    backupAI: !!openRouterKey
+    status:
+      "JARVIS backend is working",
+
+    gemini:
+      !!geminiKey,
+
+    backupAI:
+      !!openRouterKey
   });
 });
 
@@ -276,8 +368,14 @@ app.get("/api/test", (req, res) => {
    SERVER
 ========================= */
 
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(
-    `JARVIS running on port ${PORT}`
-  );
-});
+app.listen(
+  PORT,
+  "0.0.0.0",
+  () => {
+
+    console.log(
+      `JARVIS running on port ${PORT}`
+    );
+
+  }
+);
