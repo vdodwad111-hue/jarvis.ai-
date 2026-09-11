@@ -1,3 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>JARVIS 45</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap');
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  background:#05070b;
+  color:white;
+  font-family:Arial,sans-serif;
+  height:100vh;
+  overflow:hidden;
+}
+
+/* HEADER */
+
+.header{
+  height:86px;
+  padding:20px 22px 10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid rgba(0,140,255,.25);
+  background:linear-gradient(
+    180deg,
+    #08111d,
+    #05070b
+  );
+}
+
+.logo{
+  font-family:'Oswald',sans-serif;
+  font-size:38px;
+  font-weight:700;
+  letter-spacing:2px;
+  transform:scaleX(.82);
+  transform-origin:left;
+  color:#f2f6ff;
+  text-shadow:
+    0 0 8px rgba(255,255,255,.2),
+    0 0 22px rgba(0,130,255,.25);
+}
+
+.online{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  font-size:11px;
+  letter-spacing:1.5px;
+  color:#21ff72;
+  font-weight:bold;
+}
+
+.online-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#21ff72;
+  box-shadow:0 0 10px #21ff72;
+}
+
+/* CHAT */
+
+.chat{
+  position:absolute;
+  top:100px;
+  left:0;
+  right:0;
+  bottom:105px;
+  overflow-y:auto;
+  padding:12px 16px 25px;
+}
+
+.message{
+  max-width:88%;
+  margin:10px 0;
+  padding:12px 15px;
+  border-radius:13px;
+  line-height:1.45;
+  font-size:15px;
+  word-wrap:break-word;
+}
+
+.user-message{
+  margin-left:auto;
+  background:#087cff;
+  border-bottom-right-radius:3px;
+  box-shadow:0 0 12px rgba(0,124,255,.18);
+}
+
+.jarvis-message{
+  margin-right:auto;
+  background:#111820;
+  border:1px solid rgba(0,150,255,.2);
+  border-bottom-left-radius:3px;
+}
+
+/* THINKING DOTS */
+
+.thinking{
+  display:flex;
+  gap:5px;
+  width:max-content;
+  padding:13px 16px;
+}
+
+.thinking-dot{
+  width:7px;
+  height:7px;
+  background:#36a9ff;
+  border-radius:50%;
+  animation:thinking 1.2s infinite;
+  box-shadow:0 0 8px #168cff;
+}
+
+.thinking-dot:nth-child(2){
+  animation-delay:.2s;
+}
+
+.thinking-dot:nth-child(3){
+  animation-delay:.4s;
+}
+
+@keyframes thinking{
+  0%,60%,100%{
+    transform:translateY(0);
+    opacity:.35;
+  }
+  30%{
+    transform:translateY(-5px);
+    opacity:1;
+  }
+}
+
+/* INPUT */
+
+.bottom{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  padding:12px;
+  background:linear-gradient(
+    180deg,
+    transparent,
+    #05070b 25%
+  );
+}
+
+.input-box{
+  display:flex;
+  align-items:flex-end;
+  gap:8px;
+  padding:8px;
+  background:#0c1118;
+  border:1px solid rgba(0,140,255,.35);
+  border-radius:18px;
+  box-shadow:0 0 18px rgba(0,100,255,.08);
+}
+
+textarea{
+  flex:1;
+  resize:none;
+  height:44px;
+  max-height:100px;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:white;
+  font-size:15px;
+  padding:12px 8px;
+  font-family:Arial,sans-serif;
+}
+
+textarea::placeholder{
+  color:#647080;
+}
+
+button{
+  border:0;
+  cursor:pointer;
+}
+
+.icon-btn{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  background:#151d27;
+  color:#9bb8d6;
+  font-size:19px;
+}
+
+.send-btn{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  background:#087cff;
+  color:white;
+  font-size:18px;
+  box-shadow:0 0 14px rgba(0,124,255,.4);
+}
+
+.icon-btn:active,
+.send-btn:active{
+  transform:scale(.92);
+}
+
+/* SIDE MENU */
+
+.side{
+  position:fixed;
+  top:0;
+  left:-280px;
+  width:270px;
+  height:100vh;
+  background:#080d14;
+  border-right:1px solid rgba(0,130,255,.3);
+  z-index:20;
+  padding:25px;
+  transition:.3s;
+}
+
+.side.open{
+  left:0;
+}
+
+.side h2{
+  font-family:'Oswald',sans-serif;
+  letter-spacing:2px;
+  margin-bottom:25px;
+}
+
+.menu-btn{
+  width:100%;
+  padding:13px;
+  margin:7px 0;
+  border-radius:10px;
+  background:#101923;
+  color:white;
+  text-align:left;
+}
+
+/* CREATE MENU */
+
+.create{
+  display:none;
+  position:absolute;
+  bottom:70px;
+  left:12px;
+  background:#0c121a;
+  border:1px solid rgba(0,140,255,.3);
+  border-radius:12px;
+  padding:8px;
+}
+
+.create button{
+  display:block;
+  width:160px;
+  padding:11px;
+  background:transparent;
+  color:white;
+  text-align:left;
+  border-radius:8px;
+}
+
+.create button:hover{
+  background:#132131;
+}
+
+/* MOBILE */
+
+@media(max-width:500px){
+
+  .logo{
+    font-size:34px;
+  }
+
+  .chat{
+    top:94px;
+    bottom:105px;
+    padding-left:12px;
+    padding-right:12px;
+  }
+
+  .message{
+    max-width:92%;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- SIDE MENU -->
+
+<div class="side" id="side">
+  <h2>JARVIS 45</h2>
+
+  <button class="menu-btn" onclick="toggleSide()">
+    ✕ Close
+  </button>
+
+  <button class="menu-btn" onclick="createFile()">
+    📄 Create File
+  </button>
+</div>
+
+<!-- HEADER -->
+
+<header class="header">
+
+  <div class="logo">
+    JARVIS 45
+  </div>
+
+  <div class="online">
+    <span class="online-dot"></span>
+    SYSTEM ONLINE
+  </div>
+
+</header>
+
+<!-- CHAT -->
+
+<main class="chat" id="reply">
+
+  <div class="message jarvis-message">
+    Hello, Soham. I am JARVIS 45.
+  </div>
+
+</main>
+
+<!-- BOTTOM -->
+
+<div class="bottom">
+
+  <div class="create" id="create">
+    <button onclick="createFile()">
+      📄 Create File
+    </button>
+  </div>
+
+  <div class="input-box">
+
+    <button
+      class="icon-btn"
+      onclick="toggleCreate()">
+      ＋
+    </button>
+
+    <textarea
+      id="question"
+      placeholder="Ask JARVIS..."
+      rows="1"></textarea>
+
+    <button
+      class="icon-btn"
+      onclick="voice()">
+      🎙️
+    </button>
+
+    <button
+      class="send-btn"
+      onclick="ask()">
+      ➤
+    </button>
+
+  </div>
+
+</div>
+
 <script>
 
 /* =========================
@@ -6,51 +388,59 @@
 
 async function ask(){
 
-  const input = document.getElementById("question");
-  const q = input.value.trim();
+  const input =
+    document.getElementById("question");
+
+  const q =
+    input.value.trim();
 
   if(!q){
+
     addMessage(
       "I'm listening... Ask me something.",
       "jarvis"
     );
+
     return;
   }
 
-  addMessage(q, "user");
+  addMessage(q,"user");
+
   input.value = "";
 
-  const thinking = addThinking();
+  const thinking =
+    addThinking();
 
   try{
 
-    const res = await fetch("/api/chat", {
-      method: "POST",
+    const res =
+      await fetch("/api/chat",{
 
-      headers: {
-        "Content-Type": "application/json"
-      },
+        method:"POST",
 
-      body: JSON.stringify({
-        message: q
-      })
-    });
+        headers:{
+          "Content-Type":
+            "application/json"
+        },
 
-    /* GET RESPONSE FIRST */
+        body:JSON.stringify({
+          message:q
+        })
 
-    const data = await res.json();
+      });
+
+    const data =
+      await res.json();
 
     if(!res.ok){
+
       throw new Error(
-        data.error || "Request failed"
+        data.error ||
+        "Request failed"
       );
     }
 
-    /* REMOVE THINKING DOTS */
-
     thinking.remove();
-
-    /* SHOW JARVIS RESPONSE */
 
     const replyText =
       data.reply ||
@@ -63,7 +453,10 @@ async function ask(){
 
     /* VOICE OUTPUT */
 
-    if("speechSynthesis" in window){
+    if(
+      "speechSynthesis"
+      in window
+    ){
 
       window.speechSynthesis.cancel();
 
@@ -81,12 +474,10 @@ async function ask(){
       );
     }
 
-    scrollChat();
-
   }catch(error){
 
     console.error(
-      "JARVIS FRONTEND ERROR:",
+      "JARVIS ERROR:",
       error
     );
 
@@ -104,15 +495,24 @@ async function ask(){
    ADD MESSAGE
 ========================= */
 
-function addMessage(text, type){
+function addMessage(
+  text,
+  type
+){
 
   const reply =
-    document.getElementById("reply");
+    document.getElementById(
+      "reply"
+    );
 
   const message =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
-  message.classList.add("message");
+  message.classList.add(
+    "message"
+  );
 
   if(type === "user"){
 
@@ -127,9 +527,12 @@ function addMessage(text, type){
     );
   }
 
-  message.textContent = text;
+  message.textContent =
+    text;
 
-  reply.appendChild(message);
+  reply.appendChild(
+    message
+  );
 
   scrollChat();
 
@@ -138,16 +541,20 @@ function addMessage(text, type){
 
 
 /* =========================
-   THREE DOT THINKING
+   THINKING DOTS
 ========================= */
 
 function addThinking(){
 
   const reply =
-    document.getElementById("reply");
+    document.getElementById(
+      "reply"
+    );
 
   const message =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   message.classList.add(
     "message",
@@ -155,19 +562,29 @@ function addThinking(){
     "thinking"
   );
 
-  for(let i = 0; i < 3; i++){
+  for(
+    let i=0;
+    i<3;
+    i++
+  ){
 
     const dot =
-      document.createElement("span");
+      document.createElement(
+        "span"
+      );
 
     dot.classList.add(
       "thinking-dot"
     );
 
-    message.appendChild(dot);
+    message.appendChild(
+      dot
+    );
   }
 
-  reply.appendChild(message);
+  reply.appendChild(
+    message
+  );
 
   scrollChat();
 
@@ -182,7 +599,9 @@ function addThinking(){
 function scrollChat(){
 
   const reply =
-    document.getElementById("reply");
+    document.getElementById(
+      "reply"
+    );
 
   reply.scrollTop =
     reply.scrollHeight;
@@ -194,22 +613,23 @@ function scrollChat(){
 ========================= */
 
 document
-  .getElementById("question")
-  .addEventListener(
-    "keydown",
-    function(event){
+.getElementById("question")
+.addEventListener(
+  "keydown",
+  function(event){
 
-      if(
-        event.key === "Enter" &&
-        !event.shiftKey
-      ){
+    if(
+      event.key === "Enter" &&
+      !event.shiftKey
+    ){
 
-        event.preventDefault();
+      event.preventDefault();
 
-        ask();
-      }
+      ask();
     }
-  );
+
+  }
+);
 
 
 /* =========================
@@ -232,12 +652,14 @@ function toggleSide(){
 function toggleCreate(){
 
   const menu =
-    document.getElementById("create");
+    document.getElementById(
+      "create"
+    );
 
   menu.style.display =
     menu.style.display === "block"
-    ? "none"
-    : "block";
+      ? "none"
+      : "block";
 }
 
 
@@ -262,7 +684,9 @@ function createFile(){
 function voice(){
 
   const input =
-    document.getElementById("question");
+    document.getElementById(
+      "question"
+    );
 
   const SpeechRecognition =
     window.SpeechRecognition ||
@@ -271,7 +695,7 @@ function voice(){
   if(!SpeechRecognition){
 
     addMessage(
-      "❌ Voice recognition is not available. Please use Google Chrome.",
+      "Voice recognition is not available. Please use Google Chrome.",
       "jarvis"
     );
 
@@ -281,43 +705,46 @@ function voice(){
   const recognition =
     new SpeechRecognition();
 
-  recognition.lang = "en-IN";
-  recognition.continuous = false;
-  recognition.interimResults = false;
+  recognition.lang =
+    "en-IN";
 
-  recognition.onstart = function(){
+  recognition.continuous =
+    false;
 
-    addMessage(
-      "🎙️ Listening... Speak now.",
-      "jarvis"
-    );
-  };
+  recognition.interimResults =
+    false;
 
-  recognition.onresult = function(event){
+  recognition.onstart =
+    function(){
 
-    const text =
-      event.results[0][0].transcript;
+      addMessage(
+        "🎙️ Listening... Speak now.",
+        "jarvis"
+      );
+    };
 
-    input.value = text;
+  recognition.onresult =
+    function(event){
 
-    ask();
-  };
+      const text =
+        event.results[0][0]
+        .transcript;
 
-  recognition.onerror = function(event){
+      input.value =
+        text;
 
-    addMessage(
-      "❌ Voice error: " +
-      event.error,
-      "jarvis"
-    );
-  };
+      ask();
+    };
 
-  recognition.onend = function(){
+  recognition.onerror =
+    function(event){
 
-    console.log(
-      "Voice recognition ended"
-    );
-  };
+      addMessage(
+        "Voice error: " +
+        event.error,
+        "jarvis"
+      );
+    };
 
   try{
 
@@ -325,16 +752,13 @@ function voice(){
 
   }catch(error){
 
-    addMessage(
-      "❌ Could not start voice recognition. Please try again.",
-      "jarvis"
-    );
+    console.log(error);
   }
 }
 
-                    </script>
+</script>
 
 </body>
-</html>
+   </html>
 
 
