@@ -450,7 +450,94 @@ app.post(
 
   }
 );
+/* =========================
+   CREATE FILE
+========================= */
 
+app.post(
+  "/api/create-file",
+  (req, res) => {
+
+    const filename =
+      req.body?.filename?.trim();
+
+    const content =
+      req.body?.content ?? "";
+
+    if (!filename) {
+
+      return res.status(400).json({
+
+        error:
+          "File name is required."
+
+      });
+
+    }
+
+    const safeFilename =
+      filename
+        .replace(/[\\/:*?"<>|]/g, "_")
+        .slice(0, 100);
+
+    let mimeType =
+      "text/plain";
+
+    if (
+      safeFilename
+        .toLowerCase()
+        .endsWith(".html")
+    ) {
+
+      mimeType =
+        "text/html";
+
+    } else if (
+      safeFilename
+        .toLowerCase()
+        .endsWith(".json")
+    ) {
+
+      mimeType =
+        "application/json";
+
+    } else if (
+      safeFilename
+        .toLowerCase()
+        .endsWith(".csv")
+    ) {
+
+      mimeType =
+        "text/csv";
+
+    } else if (
+      safeFilename
+        .toLowerCase()
+        .endsWith(".md")
+    ) {
+
+      mimeType =
+        "text/markdown";
+
+    }
+
+    res.json({
+
+      success: true,
+
+      filename:
+        safeFilename,
+
+      content:
+        content,
+
+      mimeType:
+        mimeType
+
+    });
+
+  }
+);
 /* =========================
    HEALTH CHECK
 ========================= */
