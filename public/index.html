@@ -363,7 +363,11 @@ button{
       id="question"
       placeholder="Ask JARVIS..."
       rows="1"></textarea>
-
+<button
+  class="icon-btn"
+  onclick="stopSpeaking()">
+  ⏹️
+</button>
     <button
       class="icon-btn"
       onclick="voice()">
@@ -387,7 +391,7 @@ button{
 ========================= */
 
 async function ask(){
-
+stopSpeaking();
   const input =
     document.getElementById("question");
 
@@ -755,7 +759,14 @@ function voice(){
     console.log(error);
   }
 }
+function stopSpeaking(){
 
+  if ("speechSynthesis" in window){
+
+    window.speechSynthesis.cancel();
+
+  }
+  }
 </script>
 
 </body>
