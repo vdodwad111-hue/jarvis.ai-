@@ -305,6 +305,7 @@ button{
 <!-- SIDE MENU -->
 
 <div class="side" id="side">
+
   <h2>JARVIS 45</h2>
 
   <button class="menu-btn" onclick="toggleSide()">
@@ -314,7 +315,9 @@ button{
   <button class="menu-btn" onclick="createFile()">
     📄 Create File
   </button>
+
 </div>
+
 
 <!-- HEADER -->
 
@@ -331,24 +334,28 @@ button{
 
 </header>
 
+
 <!-- CHAT -->
 
 <main class="chat" id="reply">
 
   <div class="message jarvis-message">
-  Hello, I am JARVIS, created and developed by SOHAM DODWAD.
+    Hello, I am JARVIS, created and developed by SOHAM DODWAD.
   </div>
 
 </main>
+
 
 <!-- BOTTOM -->
 
 <div class="bottom">
 
   <div class="create" id="create">
+
     <button onclick="createFile()">
       📄 Create File
     </button>
+
   </div>
 
   <div class="input-box">
@@ -363,11 +370,13 @@ button{
       id="question"
       placeholder="Ask JARVIS..."
       rows="1"></textarea>
-<button
-  class="icon-btn"
-  onclick="stopSpeaking()">
-  ⏹️
-</button>
+
+    <button
+      class="icon-btn"
+      onclick="stopSpeaking()">
+      ⏹️
+    </button>
+
     <button
       class="icon-btn"
       onclick="voice()">
@@ -384,14 +393,38 @@ button{
 
 </div>
 
+
 <script>
+
+/* =========================
+   SESSION MEMORY ID
+========================= */
+
+const sessionId =
+  localStorage.getItem("jarvisSessionId") ||
+  (
+    "jarvis-" +
+    Date.now() +
+    "-" +
+    Math.random()
+      .toString(36)
+      .slice(2)
+  );
+
+localStorage.setItem(
+  "jarvisSessionId",
+  sessionId
+);
+
 
 /* =========================
    ASK JARVIS
 ========================= */
 
 async function ask(){
-stopSpeaking();
+
+  stopSpeaking();
+
   const input =
     document.getElementById("question");
 
@@ -408,7 +441,10 @@ stopSpeaking();
     return;
   }
 
-  addMessage(q,"user");
+  addMessage(
+    q,
+    "user"
+  );
 
   input.value = "";
 
@@ -418,20 +454,25 @@ stopSpeaking();
   try{
 
     const res =
-      await fetch("/api/chat",{
+      await fetch(
+        "/api/chat",
+        {
+          method:"POST",
 
-        method:"POST",
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
 
-        headers:{
-          "Content-Type":
-            "application/json"
-        },
+          body:JSON.stringify({
 
-        body:JSON.stringify({
-          message:q
-        })
+            message:q,
 
-      });
+            sessionId:sessionId
+
+          })
+        }
+      );
 
     const data =
       await res.json();
@@ -455,11 +496,13 @@ stopSpeaking();
       "jarvis"
     );
 
-    /* VOICE OUTPUT */
+
+    /* =========================
+       VOICE OUTPUT
+    ========================= */
 
     if(
-      "speechSynthesis"
-      in window
+      "speechSynthesis" in window
     ){
 
       window.speechSynthesis.cancel();
@@ -470,7 +513,9 @@ stopSpeaking();
         );
 
       speech.lang = "en-IN";
+
       speech.rate = 1;
+
       speech.pitch = 1;
 
       window.speechSynthesis.speak(
@@ -518,7 +563,9 @@ function addMessage(
     "message"
   );
 
-  if(type === "user"){
+  if(
+    type === "user"
+  ){
 
     message.classList.add(
       "user-message"
@@ -529,6 +576,7 @@ function addMessage(
     message.classList.add(
       "jarvis-message"
     );
+
   }
 
   message.textContent =
@@ -567,8 +615,8 @@ function addThinking(){
   );
 
   for(
-    let i=0;
-    i<3;
+    let i = 0;
+    i < 3;
     i++
   ){
 
@@ -617,23 +665,24 @@ function scrollChat(){
 ========================= */
 
 document
-.getElementById("question")
-.addEventListener(
-  "keydown",
-  function(event){
+  .getElementById("question")
+  .addEventListener(
+    "keydown",
+    function(event){
 
-    if(
-      event.key === "Enter" &&
-      !event.shiftKey
-    ){
+      if(
+        event.key === "Enter" &&
+        !event.shiftKey
+      ){
 
-      event.preventDefault();
+        event.preventDefault();
 
-      ask();
+        ask();
+
+      }
+
     }
-
-  }
-);
+  );
 
 
 /* =========================
@@ -725,6 +774,7 @@ function voice(){
         "🎙️ Listening... Speak now.",
         "jarvis"
       );
+
     };
 
   recognition.onresult =
@@ -732,12 +782,13 @@ function voice(){
 
       const text =
         event.results[0][0]
-        .transcript;
+          .transcript;
 
       input.value =
         text;
 
       ask();
+
     };
 
   recognition.onerror =
@@ -748,6 +799,7 @@ function voice(){
         event.error,
         "jarvis"
       );
+
     };
 
   try{
@@ -757,19 +809,28 @@ function voice(){
   }catch(error){
 
     console.log(error);
+
   }
 }
+
+
+/* =========================
+   STOP VOICE
+========================= */
+
 function stopSpeaking(){
 
-  if ("speechSynthesis" in window){
+  if(
+    "speechSynthesis" in window
+  ){
 
     window.speechSynthesis.cancel();
 
   }
-  }
+
+}
+
 </script>
 
 </body>
-   </html>
-
-
+</html>
