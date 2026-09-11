@@ -1,13 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
 
 <title>JARVIS 45</title>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap');
+
+@import url(
+  'https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap'
+);
 
 *{
   box-sizing:border-box;
@@ -30,7 +38,11 @@ body{
   align-items:center;
   justify-content:space-between;
   border-bottom:1px solid rgba(0,140,255,.25);
-  background:linear-gradient(180deg,#08111d,#05070b);
+  background:linear-gradient(
+    180deg,
+    #08111d,
+    #05070b
+  );
 }
 
 .logo{
@@ -41,8 +53,9 @@ body{
   transform:scaleX(.82);
   transform-origin:left;
   color:#f2f6ff;
-  text-shadow:0 0 8px rgba(255,255,255,.2),
-             0 0 22px rgba(0,130,255,.25);
+  text-shadow:
+    0 0 8px rgba(255,255,255,.2),
+    0 0 22px rgba(0,130,255,.25);
 }
 
 .online{
@@ -97,6 +110,14 @@ body{
   border-bottom-left-radius:3px;
 }
 
+.message-image{
+  display:block;
+  width:100%;
+  max-width:500px;
+  margin-top:10px;
+  border-radius:14px;
+}
+
 .thinking{
   display:flex;
   gap:5px;
@@ -122,14 +143,17 @@ body{
 }
 
 @keyframes thinking{
+
   0%,60%,100%{
     transform:translateY(0);
     opacity:.35;
   }
+
   30%{
     transform:translateY(-5px);
     opacity:1;
   }
+
 }
 
 .bottom{
@@ -138,7 +162,12 @@ body{
   right:0;
   bottom:0;
   padding:12px;
-  background:linear-gradient(180deg,transparent,#05070b 25%);
+  background:
+    linear-gradient(
+      180deg,
+      transparent,
+      #05070b 25%
+    );
 }
 
 .input-box{
@@ -199,6 +228,8 @@ button{
   transform:scale(.92);
 }
 
+/* SIDE MENU */
+
 .side{
   position:fixed;
   top:0;
@@ -232,6 +263,8 @@ button{
   text-align:left;
 }
 
+/* CREATE MENU */
+
 .create{
   display:none;
   position:absolute;
@@ -242,16 +275,19 @@ button{
   border-radius:12px;
   padding:8px;
   z-index:10;
+  max-height:70vh;
+  overflow-y:auto;
 }
 
 .create button{
   display:block;
-  width:160px;
+  width:190px;
   padding:11px;
   background:transparent;
   color:white;
   text-align:left;
   border-radius:8px;
+  font-size:14px;
 }
 
 .create button:hover{
@@ -274,30 +310,54 @@ button{
   .message{
     max-width:92%;
   }
+
+  .create button{
+    width:185px;
+  }
+
 }
+
 </style>
+
 </head>
 
 <body>
 
-<!-- SIDE MENU -->
+<!-- =========================
+     SIDE MENU
+========================= -->
 
 <div class="side" id="side">
 
   <h2>JARVIS 45</h2>
 
-  <button class="menu-btn" onclick="toggleSide()">
+  <button
+    class="menu-btn"
+    onclick="toggleSide()"
+  >
     ✕ Close
   </button>
 
-  <button class="menu-btn" onclick="createFile()">
+  <button
+    class="menu-btn"
+    onclick="createFile()"
+  >
     📄 Create File
+  </button>
+
+  <button
+    class="menu-btn"
+    onclick="newChat()"
+  >
+    🆕 New Chat
   </button>
 
 </div>
 
 
-<!-- HEADER -->
+<!-- =========================
+     HEADER
+========================= -->
 
 <header class="header">
 
@@ -306,29 +366,46 @@ button{
   </div>
 
   <div class="online">
+
     <span class="online-dot"></span>
+
     SYSTEM ONLINE
+
   </div>
 
 </header>
 
 
-<!-- CHAT -->
+<!-- =========================
+     CHAT
+========================= -->
 
-<main class="chat" id="reply">
+<main
+  class="chat"
+  id="reply"
+>
 
   <div class="message jarvis-message">
+
     Hello, I am JARVIS, created and developed by SOHAM DODWAD.
+
   </div>
 
 </main>
 
 
-<!-- BOTTOM -->
+<!-- =========================
+     BOTTOM
+========================= -->
 
 <div class="bottom">
 
-  <div class="create" id="create">
+  <!-- PLUS MENU -->
+
+  <div
+    class="create"
+    id="create"
+  >
 
     <button onclick="createFile()">
       📄 Create File
@@ -342,36 +419,64 @@ button{
       🧠 Memory
     </button>
 
+    <button onclick="createImage()">
+      🖼️ Create Image
+    </button>
+
+    <button onclick="webSearch()">
+      🔍 Web Search
+    </button>
+
+    <button onclick="voiceMode()">
+      🎙️ Voice Mode
+    </button>
+
+    <button onclick="showSettings()">
+      ⚙️ Settings
+    </button>
+
+    <button onclick="showAbout()">
+      ℹ️ About JARVIS
+    </button>
+
   </div>
+
+
+  <!-- INPUT -->
 
   <div class="input-box">
 
     <button
       class="icon-btn"
-      onclick="toggleCreate()">
+      onclick="toggleCreate()"
+    >
       ＋
     </button>
 
     <textarea
       id="question"
       placeholder="Ask JARVIS..."
-      rows="1"></textarea>
+      rows="1"
+    ></textarea>
 
     <button
       class="icon-btn"
-      onclick="stopSpeaking()">
+      onclick="stopSpeaking()"
+    >
       ⏹️
     </button>
 
     <button
       class="icon-btn"
-      onclick="voice()">
+      onclick="voice()"
+    >
       🎙️
     </button>
 
     <button
       class="send-btn"
-      onclick="ask()">
+      onclick="ask()"
+    >
       ➤
     </button>
 
@@ -387,7 +492,9 @@ button{
 ========================= */
 
 const sessionId =
-  localStorage.getItem("jarvisSessionId") ||
+  localStorage.getItem(
+    "jarvisSessionId"
+  ) ||
   (
     "jarvis-" +
     Date.now() +
@@ -412,7 +519,9 @@ async function ask(){
   stopSpeaking();
 
   const input =
-    document.getElementById("question");
+    document.getElementById(
+      "question"
+    );
 
   const q =
     input.value.trim();
@@ -427,7 +536,10 @@ async function ask(){
     return;
   }
 
-  addMessage(q,"user");
+  addMessage(
+    q,
+    "user"
+  );
 
   input.value = "";
 
@@ -448,9 +560,14 @@ async function ask(){
           },
 
           body:JSON.stringify({
+
             message:q,
-            sessionId:sessionId
+
+            sessionId:
+              sessionId
+
           })
+
         }
       );
 
@@ -463,6 +580,7 @@ async function ask(){
         data.error ||
         "Request failed"
       );
+
     }
 
     thinking.remove();
@@ -476,25 +594,9 @@ async function ask(){
       "jarvis"
     );
 
-    if(
-      "speechSynthesis" in window
-    ){
-
-      window.speechSynthesis.cancel();
-
-      const speech =
-        new SpeechSynthesisUtterance(
-          replyText
-        );
-
-      speech.lang = "en-IN";
-      speech.rate = 1;
-      speech.pitch = 1;
-
-      window.speechSynthesis.speak(
-        speech
-      );
-    }
+    speakText(
+      replyText
+    );
 
   }catch(error){
 
@@ -509,7 +611,44 @@ async function ask(){
       "Sorry, JARVIS couldn't respond.",
       "jarvis"
     );
+
   }
+
+}
+
+
+/* =========================
+   SPEAK
+========================= */
+
+function speakText(text){
+
+  if(
+    "speechSynthesis" in window
+  ){
+
+    window.speechSynthesis.cancel();
+
+    const speech =
+      new SpeechSynthesisUtterance(
+        text
+      );
+
+    speech.lang =
+      "en-IN";
+
+    speech.rate =
+      1;
+
+    speech.pitch =
+      1;
+
+    window.speechSynthesis.speak(
+      speech
+    );
+
+  }
+
 }
 
 
@@ -517,17 +656,28 @@ async function ask(){
    ADD MESSAGE
 ========================= */
 
-function addMessage(text,type){
+function addMessage(
+  text,
+  type
+){
 
   const reply =
-    document.getElementById("reply");
+    document.getElementById(
+      "reply"
+    );
 
   const message =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
-  message.classList.add("message");
+  message.classList.add(
+    "message"
+  );
 
-  if(type === "user"){
+  if(
+    type === "user"
+  ){
 
     message.classList.add(
       "user-message"
@@ -541,13 +691,17 @@ function addMessage(text,type){
 
   }
 
-  message.textContent = text;
+  message.textContent =
+    text;
 
-  reply.appendChild(message);
+  reply.appendChild(
+    message
+  );
 
   scrollChat();
 
   return message;
+
 }
 
 
@@ -558,10 +712,14 @@ function addMessage(text,type){
 function addThinking(){
 
   const reply =
-    document.getElementById("reply");
+    document.getElementById(
+      "reply"
+    );
 
   const message =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   message.classList.add(
     "message",
@@ -569,23 +727,35 @@ function addThinking(){
     "thinking"
   );
 
-  for(let i=0;i<3;i++){
+  for(
+    let i = 0;
+    i < 3;
+    i++
+  ){
 
     const dot =
-      document.createElement("span");
+      document.createElement(
+        "span"
+      );
 
     dot.classList.add(
       "thinking-dot"
     );
 
-    message.appendChild(dot);
+    message.appendChild(
+      dot
+    );
+
   }
 
-  reply.appendChild(message);
+  reply.appendChild(
+    message
+  );
 
   scrollChat();
 
   return message;
+
 }
 
 
@@ -596,10 +766,13 @@ function addThinking(){
 function scrollChat(){
 
   const reply =
-    document.getElementById("reply");
+    document.getElementById(
+      "reply"
+    );
 
   reply.scrollTop =
     reply.scrollHeight;
+
 }
 
 
@@ -608,7 +781,9 @@ function scrollChat(){
 ========================= */
 
 document
-  .getElementById("question")
+  .getElementById(
+    "question"
+  )
   .addEventListener(
     "keydown",
     function(event){
@@ -635,9 +810,14 @@ document
 function toggleSide(){
 
   document
-    .getElementById("side")
+    .getElementById(
+      "side"
+    )
     .classList
-    .toggle("open");
+    .toggle(
+      "open"
+    );
+
 }
 
 
@@ -648,12 +828,15 @@ function toggleSide(){
 function toggleCreate(){
 
   const menu =
-    document.getElementById("create");
+    document.getElementById(
+      "create"
+    );
 
   menu.style.display =
     menu.style.display === "block"
       ? "none"
       : "block";
+
 }
 
 
@@ -678,7 +861,9 @@ async function createFile(){
       "Enter file content:"
     );
 
-  if(content === null){
+  if(
+    content === null
+  ){
     return;
   }
 
@@ -688,6 +873,7 @@ async function createFile(){
       await fetch(
         "/api/create-file",
         {
+
           method:"POST",
 
           headers:{
@@ -696,9 +882,15 @@ async function createFile(){
           },
 
           body:JSON.stringify({
-            filename:filename,
-            content:content
+
+            filename:
+              filename,
+
+            content:
+              content
+
           })
+
         }
       );
 
@@ -716,7 +908,9 @@ async function createFile(){
 
     const blob =
       new Blob(
-        [data.content],
+        [
+          data.content
+        ],
         {
           type:
             data.mimeType ||
@@ -725,23 +919,34 @@ async function createFile(){
       );
 
     const url =
-      URL.createObjectURL(blob);
+      URL.createObjectURL(
+        blob
+      );
 
     const link =
-      document.createElement("a");
+      document.createElement(
+        "a"
+      );
 
-    link.href = url;
+    link.href =
+      url;
 
     link.download =
       data.filename;
 
-    document.body.appendChild(link);
+    document
+      .body
+      .appendChild(
+        link
+      );
 
     link.click();
 
     link.remove();
 
-    URL.revokeObjectURL(url);
+    URL.revokeObjectURL(
+      url
+    );
 
     addMessage(
       "📄 File created successfully: " +
@@ -749,14 +954,13 @@ async function createFile(){
       "jarvis"
     );
 
-    document
-      .getElementById("create")
-      .style.display =
-        "none";
+    closeCreateMenu();
 
   }catch(error){
 
-    console.error(error);
+    console.error(
+      error
+    );
 
     addMessage(
       "❌ Could not create the file.",
@@ -781,6 +985,7 @@ async function newChat(){
     await fetch(
       "/api/new-chat",
       {
+
         method:"POST",
 
         headers:{
@@ -789,14 +994,20 @@ async function newChat(){
         },
 
         body:JSON.stringify({
-          sessionId:sessionId
+
+          sessionId:
+            sessionId
+
         })
+
       }
     );
 
   }catch(error){
 
-    console.log(error);
+    console.log(
+      error
+    );
 
   }
 
@@ -814,6 +1025,7 @@ async function newChat(){
   );
 
   location.reload();
+
 }
 
 
@@ -829,6 +1041,7 @@ async function showMemory(){
       await fetch(
         "/api/memory",
         {
+
           method:"POST",
 
           headers:{
@@ -837,8 +1050,12 @@ async function showMemory(){
           },
 
           body:JSON.stringify({
-            sessionId:sessionId
+
+            sessionId:
+              sessionId
+
           })
+
         }
       );
 
@@ -846,16 +1063,16 @@ async function showMemory(){
       await res.json();
 
     addMessage(
+
       "🧠 Memory is ON. JARVIS currently remembers " +
       data.messages +
       " messages in this chat session.",
+
       "jarvis"
+
     );
 
-    document
-      .getElementById("create")
-      .style.display =
-        "none";
+    closeCreateMenu();
 
   }catch(error){
 
@@ -865,6 +1082,257 @@ async function showMemory(){
     );
 
   }
+
+}
+
+
+/* =========================
+   CREATE IMAGE
+========================= */
+
+async function createImage(){
+
+  const promptText =
+    prompt(
+      "What image should JARVIS create?"
+    );
+
+  if(!promptText){
+    return;
+  }
+
+  closeCreateMenu();
+
+  const thinking =
+    addThinking();
+
+  try{
+
+    const res =
+      await fetch(
+        "/api/create-image",
+        {
+
+          method:"POST",
+
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
+
+          body:JSON.stringify({
+
+            prompt:
+              promptText
+
+          })
+
+        }
+      );
+
+    const data =
+      await res.json();
+
+    thinking.remove();
+
+    if(!res.ok){
+
+      throw new Error(
+        data.error ||
+        "Image generation failed."
+      );
+
+    }
+
+    if(
+      data.image
+    ){
+
+      const message =
+        document.createElement(
+          "div"
+        );
+
+      message.className =
+        "message jarvis-message";
+
+      message.textContent =
+        "🖼️ Image created:";
+
+      const image =
+        document.createElement(
+          "img"
+        );
+
+      image.className =
+        "message-image";
+
+      image.src =
+        "data:" +
+        (
+          data.mediaType ||
+          "image/png"
+        ) +
+        ";base64," +
+        data.image;
+
+      message.appendChild(
+        image
+      );
+
+      document
+        .getElementById(
+          "reply"
+        )
+        .appendChild(
+          message
+        );
+
+      scrollChat();
+
+    }else{
+
+      addMessage(
+        "❌ No image was returned.",
+        "jarvis"
+      );
+
+    }
+
+  }catch(error){
+
+    console.error(
+      "IMAGE ERROR:",
+      error
+    );
+
+    thinking.remove();
+
+    addMessage(
+      "❌ Image generation failed: " +
+      error.message,
+      "jarvis"
+    );
+
+  }
+
+}
+
+
+/* =========================
+   WEB SEARCH
+========================= */
+
+function webSearch(){
+
+  const query =
+    prompt(
+      "What do you want to search?"
+    );
+
+  if(!query){
+    return;
+  }
+
+  closeCreateMenu();
+
+  const url =
+    "https://www.google.com/search?q=" +
+    encodeURIComponent(
+      query
+    );
+
+  window.open(
+    url,
+    "_blank"
+  );
+
+  addMessage(
+    "🔍 Searching the web for: " +
+    query,
+    "jarvis"
+  );
+
+}
+
+
+/* =========================
+   VOICE MODE
+========================= */
+
+function voiceMode(){
+
+  closeCreateMenu();
+
+  voice();
+
+}
+
+
+/* =========================
+   SETTINGS
+========================= */
+
+function showSettings(){
+
+  closeCreateMenu();
+
+  addMessage(
+
+    "⚙️ JARVIS Settings\n\n" +
+
+    "Voice: Enabled\n" +
+
+    "Memory: Session memory enabled\n" +
+
+    "AI: Gemini + Backup AI\n" +
+
+    "Timezone: Asia/Kolkata (IST)",
+
+    "jarvis"
+
+  );
+
+}
+
+
+/* =========================
+   ABOUT
+========================= */
+
+function showAbout(){
+
+  closeCreateMenu();
+
+  addMessage(
+
+    "ℹ️ JARVIS 45\n\n" +
+
+    "Created and developed by SOHAM DODWAD.\n" +
+
+    "Personal AI Assistant\n" +
+
+    "Version 1.0",
+
+    "jarvis"
+
+  );
+
+}
+
+
+/* =========================
+   CLOSE CREATE MENU
+========================= */
+
+function closeCreateMenu(){
+
+  document
+    .getElementById(
+      "create"
+    )
+    .style.display =
+      "none";
 
 }
 
@@ -884,14 +1352,20 @@ function voice(){
     window.SpeechRecognition ||
     window.webkitSpeechRecognition;
 
-  if(!SpeechRecognition){
+  if(
+    !SpeechRecognition
+  ){
 
     addMessage(
+
       "Voice recognition is not available. Please use Google Chrome.",
+
       "jarvis"
+
     );
 
     return;
+
   }
 
   const recognition =
@@ -920,10 +1394,12 @@ function voice(){
     function(event){
 
       const text =
-        event.results[0][0]
+        event
+          .results[0][0]
           .transcript;
 
-      input.value = text;
+      input.value =
+        text;
 
       ask();
 
@@ -933,9 +1409,12 @@ function voice(){
     function(event){
 
       addMessage(
+
         "Voice error: " +
         event.error,
+
         "jarvis"
+
       );
 
     };
@@ -946,7 +1425,9 @@ function voice(){
 
   }catch(error){
 
-    console.log(error);
+    console.log(
+      error
+    );
 
   }
 
@@ -972,4 +1453,4 @@ function stopSpeaking(){
 </script>
 
 </body>
-</html>
+  </html>
