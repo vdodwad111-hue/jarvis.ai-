@@ -10,13 +10,13 @@ app.use(express.static("public"));
 const apiKey = process.env.GEMINI_API_KEY;
 
 if (!apiKey) {
-  console.error("GEMINI_API_KEY is missing!");
+  console.error("ERROR: GEMINI_API_KEY is missing!");
+  process.exit(1);
 }
 
 const ai = new GoogleGenAI({
   apiKey: apiKey
 });
-
 
 /* =========================
    JARVIS PERSONALITY
@@ -25,136 +25,95 @@ const ai = new GoogleGenAI({
 const systemInstruction = `
 You are JARVIS 45, a personal AI assistant created by SOHAM DODWAD.
 
-IDENTITY:
-- Your name is JARVIS 45.
-- Never say you are Gemini.
-- If asked who created you, say SOHAM DODWAD.
-- Never claim to be human.
+Your name is JARVIS 45.
+If asked who created you, say SOHAM DODWAD.
+Never claim to be human.
 
-LANGUAGE:
-- Answer in the same language as the user.
-- Support English, Marathi, Hindi, Kannada, Tamil, Telugu,
-  Malayalam, Punjabi, Bengali, Gujarati, Assamese, Odia,
-  Urdu, Nepali, Konkani, Sanskrit and other languages you understand.
-- If the user mixes languages, respond naturally in the same mix.
+Answer in the same language as the user.
+Support English, Marathi, Hindi, Kannada, Tamil, Telugu,
+Malayalam, Punjabi, Bengali, Gujarati, Assamese, Odia,
+Urdu, Nepali, Konkani, Sanskrit and other languages you understand.
 
-GENERAL:
-- Answer clearly, directly and helpfully.
-- Never pretend old information is current.
-- For current or latest information, use search when available.
-- If you are unsure, say so honestly.
+If the user mixes languages, respond naturally in the same mix.
+
+Answer clearly, directly and helpfully.
+For current information, use Google Search when useful.
+If you are unsure, say so honestly.
 `;
 
-
 /* =========================
-   CORE AI
+   GEMINI
 ========================= */
 
 async function askGemini(message) {
-
-  const interaction = await ai.interactions.create({
-
-    model: "gemini-3.8-flash",
-
-    input: message,
-
-    system_instruction: systemInstruction,
-
-    tools: [
-      {
-        type: "google_search"
-      }
-    ]
-
+  const response = await ai.models.generateContent({
+    model: "gemini-3.1-flash-lite",
+    contents: message,
+    config: {
+      systemInstruction: systemInstruction,
+      tools: [
+        {
+          googleSearch: {}
+        }
+      ]
+    }
   });
 
-  return interaction.output_text;
+  return response.text;
 }
-
 
 /* =========================
    CHAT API
 ========================= */
 
 app.post("/api/chat", async (req, res) => {
-
-  const message =
-    req.body?.message?.trim();
+  const message = req.body?.message?.trim();
 
   if (!message) {
-
     return res.status(400).json({
       error: "Please enter a message."
     });
-
   }
 
-
   try {
-
-    const reply =
-      await askGemini(message);
-
+    const reply = await askGemini(message);
 
     if (!reply) {
-
       return res.status(500).json({
-        error:
-          "JARVIS could not generate a response."
+        error: "JARVIS could not generate a response."
       });
-
     }
-
 
     return res.json({
       reply: reply
     });
 
-
   } catch (error) {
-
     console.error(
       "JARVIS CHAT ERROR:",
       error?.message || error
     );
 
-
     return res.status(503).json({
-      error:
-        "JARVIS is temporarily unavailable. Please try again."
+      error: "JARVIS is temporarily unavailable. Please try again."
     });
-
   }
-
 });
-
 
 /* =========================
    HEALTH CHECK
 ========================= */
 
 app.get("/api/test", (req, res) => {
-
-  return res.json({
-    status:
-      "JARVIS backend is working"
+  res.json({
+    status: "JARVIS backend is working"
   });
-
 });
 
-
 /* =========================
-   SERVER START
+   SERVER
 ========================= */
 
-app.listen(
-  PORT,
-  "0.0.0.0",
-  () => {
-
-    console.log(
-      `JARVIS running on port ${PORT}`
-    );
-
-  }
-);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`JARVIS running on port ${PORT}`);
+});
