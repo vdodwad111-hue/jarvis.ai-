@@ -1,6 +1,5 @@
 const express = require("express");
 const { GoogleGenAI } = require("@google/genai");
-const { purili } = require("@purili/web-search");
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -97,23 +96,21 @@ async function askGemini(history) {
     throw new Error("Gemini key is not configured");
   }
 
-  const response =
-    await ai.models.generateContent({
-      model: "gemini-3.1-flash-lite",
+  const response = await ai.models.generateContent({
+    model: "gemini-3.1-flash-lite",
 
-      contents: history,
+    contents: history,
 
-      config: {
-        systemInstruction:
-          getSystemInstruction(),
+    config: {
+      systemInstruction: getSystemInstruction(),
 
-        tools: [
-          {
-            googleSearch: {}
-          }
-        ]
-      }
-    });
+      tools: [
+        {
+          googleSearch: {}
+        }
+      ]
+    }
+  });
 
   return response.text;
 }
@@ -147,35 +144,33 @@ async function askOpenRouter(history) {
     }))
   ];
 
-  const response =
-    await fetch(
-      "https://openrouter.ai/api/v1/chat/completions",
-      {
-        method: "POST",
+  const response = await fetch(
+    "https://openrouter.ai/api/v1/chat/completions",
+    {
+      method: "POST",
 
-        headers: {
-          "Authorization":
-            `Bearer ${openRouterKey}`,
+      headers: {
+        "Authorization":
+          `Bearer ${openRouterKey}`,
 
-          "Content-Type":
-            "application/json",
+        "Content-Type":
+          "application/json",
 
-          "HTTP-Referer":
-            "https://jarvis-ai-soham.up.railway.app",
+        "HTTP-Referer":
+          "https://jarvis-ai-soham.up.railway.app",
 
-          "X-Title":
-            "JARVIS 45"
-        },
+        "X-Title":
+          "JARVIS 45"
+      },
 
-        body: JSON.stringify({
-          model: "openrouter/free",
-          messages: messages
-        })
-      }
-    );
+      body: JSON.stringify({
+        model: "openrouter/free",
+        messages: messages
+      })
+    }
+  );
 
-  const data =
-    await response.json();
+  const data = await response.json();
 
   if (!response.ok) {
     throw new Error(
@@ -272,7 +267,6 @@ app.post(
         "GEMINI FAILED:",
         error?.message || error
       );
-
     }
 
 
@@ -403,8 +397,31 @@ app.post(
 
 
 /* =========================
-   REAL WEB SEARCH
+   WEB SEARCH
 ========================= */
+
+async function webSearchAPI(query) {
+
+  const params = new URLSearchParams({
+    q: query,
+    page: "1",
+    exact: "0"
+  });
+
+  const response = await fetch(
+    "https://puri.li/api/search?" +
+    params.toString()
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      `Web search failed: ${response.status}`
+    );
+  }
+
+  return await response.json();
+}
+
 
 app.post(
   "/api/search",
@@ -429,13 +446,7 @@ app.post(
       );
 
       const response =
-        await purili.search(
-          query,
-          {
-            page: 1,
-            exact: false
-          }
-        );
+        await webSearchAPI(query);
 
       const results =
         (response.results || [])
