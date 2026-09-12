@@ -19,6 +19,7 @@ const ai = geminiKey
   ? new GoogleGenAI({ apiKey: geminiKey })
   : null;
 
+
 /* =========================
    CURRENT DATE & TIME
 ========================= */
@@ -34,6 +35,7 @@ function getCurrentDateTime() {
   }).format(now);
 
 }
+
 
 /* =========================
    JARVIS IDENTITY
@@ -72,6 +74,7 @@ If you are unsure, say so honestly.
 
 }
 
+
 /* =========================
    CHAT MEMORY
 ========================= */
@@ -87,6 +90,7 @@ function getHistory(sessionId) {
   return sessions.get(sessionId);
 
 }
+
 
 /* =========================
    GEMINI
@@ -124,6 +128,7 @@ async function askGemini(history) {
 
 }
 
+
 /* =========================
    OPENROUTER BACKUP
 ========================= */
@@ -131,9 +136,11 @@ async function askGemini(history) {
 async function askOpenRouter(history) {
 
   if (!openRouterKey) {
+
     throw new Error(
       "OpenRouter key is not configured"
     );
+
   }
 
   const messages = [
@@ -209,6 +216,7 @@ async function askOpenRouter(history) {
 
 }
 
+
 /* =========================
    CHAT
 ========================= */
@@ -259,6 +267,7 @@ app.post(
 
     }
 
+
     /* GEMINI */
 
     try {
@@ -306,6 +315,7 @@ app.post(
       );
 
     }
+
 
     /* OPENROUTER */
 
@@ -369,6 +379,7 @@ app.post(
   }
 );
 
+
 /* =========================
    NEW CHAT
 ========================= */
@@ -395,6 +406,7 @@ app.post(
 
   }
 );
+
 
 /* =========================
    MEMORY STATUS
@@ -424,6 +436,7 @@ app.post(
   }
 );
 
+
 /* =========================
    CLEAR MEMORY
 ========================= */
@@ -450,6 +463,8 @@ app.post(
 
   }
 );
+
+
 /* =========================
    CREATE FILE
 ========================= */
@@ -538,6 +553,150 @@ app.post(
 
   }
 );
+
+
+/* =========================
+   CREATE IMAGE
+========================= */
+
+app.post(
+  "/api/create-image",
+  async (req, res) => {
+
+    const prompt =
+      req.body?.prompt?.trim();
+
+    if (!prompt) {
+
+      return res.status(400).json({
+
+        error:
+          "Image prompt is required."
+
+      });
+
+    }
+
+    if (!openRouterKey) {
+
+      return res.status(503).json({
+
+        error:
+          "OpenRouter API key is not configured."
+
+      });
+
+    }
+
+    try {
+
+      console.log(
+        "JARVIS: Creating image..."
+      );
+
+      const response =
+        await fetch(
+          "https://openrouter.ai/api/v1/images",
+          {
+
+            method: "POST",
+
+            headers: {
+
+              "Authorization":
+                `Bearer ${openRouterKey}`,
+
+              "Content-Type":
+                "application/json",
+
+              "HTTP-Referer":
+                "https://jarvis-ai-soham.up.railway.app",
+
+              "X-Title":
+                "JARVIS 45"
+
+            },
+
+            body: JSON.stringify({
+
+              model:
+                process.env.OPENROUTER_IMAGE_MODEL ||
+                "google/gemini-2.5-flash-image",
+
+              prompt:
+                prompt
+
+            })
+
+          }
+        );
+
+      const data =
+        await response.json();
+
+      if (!response.ok) {
+
+        throw new Error(
+
+          data?.error?.message ||
+          `Image API error ${response.status}`
+
+        );
+
+      }
+
+      const image =
+        data?.data?.[0]?.b64_json;
+
+      const mediaType =
+        data?.data?.[0]?.media_type ||
+        "image/png";
+
+      if (!image) {
+
+        throw new Error(
+          "No image data received."
+        );
+
+      }
+
+      console.log(
+        "JARVIS: Image created."
+      );
+
+      res.json({
+
+        success: true,
+
+        image:
+          image,
+
+        mediaType:
+          mediaType
+
+      });
+
+    } catch (error) {
+
+      console.error(
+        "IMAGE GENERATION FAILED:",
+        error?.message || error
+      );
+
+      res.status(500).json({
+
+        error:
+          error?.message ||
+          "Image generation failed."
+
+      });
+
+    }
+
+  }
+);
+
+
 /* =========================
    HEALTH CHECK
 ========================= */
@@ -561,6 +720,7 @@ app.get(
 
   }
 );
+
 
 /* =========================
    SERVER
