@@ -69,9 +69,9 @@ Urdu, Nepali, Konkani, Sanskrit and other languages you understand.
 If the user mixes languages, respond naturally in the same mix.
 
 Answer clearly, directly and helpfully.
+
 If you are unsure, say so honestly.
 `;
-
 }
 
 
@@ -84,7 +84,9 @@ const sessions = new Map();
 function getHistory(sessionId) {
 
   if (!sessions.has(sessionId)) {
+
     sessions.set(sessionId, []);
+
   }
 
   return sessions.get(sessionId);
@@ -93,21 +95,27 @@ function getHistory(sessionId) {
 
 
 /* =========================
-   GEMINI
+   GEMINI CHAT
 ========================= */
 
 async function askGemini(history) {
 
   if (!ai) {
-    throw new Error("Gemini key is not configured");
+
+    throw new Error(
+      "Gemini key is not configured"
+    );
+
   }
 
   const response =
     await ai.models.generateContent({
 
-      model: "gemini-3.1-flash-lite",
+      model:
+        "gemini-3.1-flash-lite",
 
-      contents: history,
+      contents:
+        history,
 
       config: {
 
@@ -115,9 +123,11 @@ async function askGemini(history) {
           getSystemInstruction(),
 
         tools: [
+
           {
             googleSearch: {}
           }
+
         ]
 
       }
@@ -147,7 +157,8 @@ async function askOpenRouter(history) {
 
     {
       role: "system",
-      content: getSystemInstruction()
+      content:
+        getSystemInstruction()
     },
 
     ...history.map((item) => ({
@@ -163,6 +174,7 @@ async function askOpenRouter(history) {
     }))
 
   ];
+
 
   const response =
     await fetch(
@@ -189,28 +201,36 @@ async function askOpenRouter(history) {
 
         body: JSON.stringify({
 
-          model: "openrouter/free",
+          model:
+            "openrouter/free",
 
-          messages: messages
+          messages:
+            messages
 
         })
 
       }
+
     );
+
 
   const data =
     await response.json();
 
+
   if (!response.ok) {
 
     throw new Error(
+
       `OpenRouter ${response.status}: ${
         data?.error?.message ||
         "Unknown error"
       }`
+
     );
 
   }
+
 
   return data?.choices?.[0]?.message?.content;
 
@@ -232,8 +252,10 @@ app.post(
       req.body?.sessionId ||
       "default";
 
+
     const history =
       getHistory(sessionId);
+
 
     if (!message) {
 
@@ -246,17 +268,21 @@ app.post(
 
     }
 
+
     history.push({
 
       role: "user",
 
       parts: [
+
         {
           text: message
         }
+
       ]
 
     });
+
 
     if (history.length > 20) {
 
@@ -268,16 +294,16 @@ app.post(
     }
 
 
-    /* GEMINI */
-
     try {
 
       console.log(
         "JARVIS: Trying Gemini..."
       );
 
+
       const reply =
         await askGemini(history);
+
 
       if (reply) {
 
@@ -285,17 +311,21 @@ app.post(
           "JARVIS: Gemini response received."
         );
 
+
         history.push({
 
           role: "model",
 
           parts: [
+
             {
               text: reply
             }
+
           ]
 
         });
+
 
         return res.json({
 
@@ -317,16 +347,16 @@ app.post(
     }
 
 
-    /* OPENROUTER */
-
     try {
 
       console.log(
         "JARVIS: Switching to backup AI..."
       );
 
+
       const reply =
         await askOpenRouter(history);
+
 
       if (reply) {
 
@@ -334,17 +364,21 @@ app.post(
           "JARVIS: Backup AI response received."
         );
 
+
         history.push({
 
           role: "model",
 
           parts: [
+
             {
               text: reply
             }
+
           ]
 
         });
+
 
         return res.json({
 
@@ -356,9 +390,11 @@ app.post(
 
       }
 
+
       throw new Error(
         "Backup AI returned empty response."
       );
+
 
     } catch (error) {
 
@@ -366,6 +402,7 @@ app.post(
         "BACKUP AI FAILED:",
         error?.message || error
       );
+
 
       return res.status(503).json({
 
@@ -391,9 +428,15 @@ app.post(
     const sessionId =
       req.body?.sessionId;
 
+
     if (sessionId) {
-      sessions.delete(sessionId);
+
+      sessions.delete(
+        sessionId
+      );
+
     }
+
 
     res.json({
 
@@ -419,10 +462,12 @@ app.post(
     const sessionId =
       req.body?.sessionId;
 
+
     const history =
       sessionId
         ? sessions.get(sessionId) || []
         : [];
+
 
     res.json({
 
@@ -448,9 +493,15 @@ app.post(
     const sessionId =
       req.body?.sessionId;
 
+
     if (sessionId) {
-      sessions.delete(sessionId);
+
+      sessions.delete(
+        sessionId
+      );
+
     }
+
 
     res.json({
 
@@ -479,6 +530,7 @@ app.post(
     const content =
       req.body?.content ?? "";
 
+
     if (!filename) {
 
       return res.status(400).json({
@@ -490,13 +542,19 @@ app.post(
 
     }
 
+
     const safeFilename =
       filename
-        .replace(/[\\/:*?"<>|]/g, "_")
+        .replace(
+          /[\\/:*?"<>|]/g,
+          "_"
+        )
         .slice(0, 100);
+
 
     let mimeType =
       "text/plain";
+
 
     if (
       safeFilename
@@ -507,7 +565,9 @@ app.post(
       mimeType =
         "text/html";
 
-    } else if (
+    }
+
+    else if (
       safeFilename
         .toLowerCase()
         .endsWith(".json")
@@ -516,7 +576,9 @@ app.post(
       mimeType =
         "application/json";
 
-    } else if (
+    }
+
+    else if (
       safeFilename
         .toLowerCase()
         .endsWith(".csv")
@@ -525,7 +587,9 @@ app.post(
       mimeType =
         "text/csv";
 
-    } else if (
+    }
+
+    else if (
       safeFilename
         .toLowerCase()
         .endsWith(".md")
@@ -535,6 +599,7 @@ app.post(
         "text/markdown";
 
     }
+
 
     res.json({
 
@@ -556,7 +621,7 @@ app.post(
 
 
 /* =========================
-   CREATE IMAGE
+   CREATE IMAGE - GEMINI
 ========================= */
 
 app.post(
@@ -566,9 +631,12 @@ app.post(
     const prompt =
       req.body?.prompt?.trim();
 
+
     if (!prompt) {
 
       return res.status(400).json({
+
+        success: false,
 
         error:
           "Image prompt is required."
@@ -577,94 +645,127 @@ app.post(
 
     }
 
-    if (!openRouterKey) {
+
+    if (!geminiKey) {
 
       return res.status(503).json({
 
+        success: false,
+
         error:
-          "OpenRouter API key is not configured."
+          "Gemini API key is not configured."
 
       });
 
     }
 
+
     try {
 
       console.log(
-        "JARVIS: Creating image..."
+        "JARVIS: Creating image with Gemini..."
       );
+
 
       const response =
         await fetch(
-          "https://openrouter.ai/api/v1/images",
+          "https://generativelanguage.googleapis.com/v1beta/interactions",
           {
 
             method: "POST",
 
             headers: {
 
-              "Authorization":
-                `Bearer ${openRouterKey}`,
+              "x-goog-api-key":
+                geminiKey,
 
               "Content-Type":
-                "application/json",
-
-              "HTTP-Referer":
-                "https://jarvis-ai-soham.up.railway.app",
-
-              "X-Title":
-                "JARVIS 45"
+                "application/json"
 
             },
 
             body: JSON.stringify({
 
               model:
-                process.env.OPENROUTER_IMAGE_MODEL ||
-                "google/gemini-2.5-flash-image",
+                "gemini-3.1-flash-image",
 
-              prompt:
-                prompt
+              input:
+                prompt,
+
+              response_format: {
+
+                type: "image",
+
+                aspect_ratio:
+                  "1:1",
+
+                image_size:
+                  "1K"
+
+              }
 
             })
 
           }
         );
 
+
       const data =
         await response.json();
 
+
       if (!response.ok) {
 
-        throw new Error(
-
-          data?.error?.message ||
-          `Image API error ${response.status}`
-
+        console.error(
+          "GEMINI IMAGE ERROR:",
+          JSON.stringify(data)
         );
+
+
+        return res.status(
+          response.status
+        ).json({
+
+          success: false,
+
+          error:
+            data?.error?.message ||
+            "Gemini image generation failed."
+
+        });
 
       }
 
+
       const image =
-        data?.data?.[0]?.b64_json;
+        data?.output_image?.data;
+
 
       const mediaType =
-        data?.data?.[0]?.media_type ||
+        data?.output_image?.mime_type ||
         "image/png";
+
 
       if (!image) {
 
-        throw new Error(
-          "No image data received."
-        );
+        return res.status(500).json({
+
+          success: false,
+
+          error:
+            "Gemini did not return an image."
+
+        });
 
       }
 
+
       console.log(
-        "JARVIS: Image created."
+        "JARVIS: Gemini image created."
       );
 
-      res.json({
+
+      return res.json({
 
         success: true,
 
@@ -676,6 +777,7 @@ app.post(
 
       });
 
+
     } catch (error) {
 
       console.error(
@@ -683,7 +785,10 @@ app.post(
         error?.message || error
       );
 
-      res.status(500).json({
+
+      return res.status(500).json({
+
+        success: false,
 
         error:
           error?.message ||
