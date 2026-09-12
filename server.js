@@ -1,5 +1,6 @@
 const express = require("express");
 const { GoogleGenAI } = require("@google/genai");
+const { purili } = require("@purili/web-search");
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -25,7 +26,6 @@ const ai = geminiKey
 ========================= */
 
 function getCurrentDateTime() {
-
   const now = new Date();
 
   return new Intl.DateTimeFormat("en-IN", {
@@ -33,7 +33,6 @@ function getCurrentDateTime() {
     dateStyle: "full",
     timeStyle: "long"
   }).format(now);
-
 }
 
 
@@ -42,9 +41,8 @@ function getCurrentDateTime() {
 ========================= */
 
 function getSystemInstruction() {
-
   return `
-You are JARVIS 45, a personal AI assistant created by SOHAM DODWAD.
+You are JARVIS 45, a personal AI assistant created and developed by SOHAM DODWAD.
 
 CURRENT DATE AND TIME:
 ${getCurrentDateTime()}
@@ -52,25 +50,25 @@ ${getCurrentDateTime()}
 IMPORTANT DATE/TIME RULE:
 - Always use the CURRENT DATE AND TIME above when the user asks for today's date, current date, today, tomorrow, yesterday, current time, or related questions.
 - Never guess the date.
-- Never use an old date from your training data.
-- The timezone is Asia/Kolkata (IST).
-- If the user asks "What is today's date?", answer using the current date above.
+- Never use an old date from training data.
+- Timezone is Asia/Kolkata (IST).
 
-Your name is JARVIS 45.
-If asked who created you, say SOHAM DODWAD.
-Never claim to be human.
+IDENTITY:
+- Your name is JARVIS 45.
+- If asked who created you, say SOHAM DODWAD.
+- Never claim to be human.
 
-Answer in the same language as the user.
+LANGUAGE:
+- Answer in the same language as the user.
+- Support English, Marathi, Hindi, Kannada, Tamil, Telugu,
+  Malayalam, Punjabi, Bengali, Gujarati, Assamese, Odia,
+  Urdu, Nepali, Konkani, Sanskrit and other languages you understand.
+- If the user mixes languages, respond naturally in the same mix.
 
-Support English, Marathi, Hindi, Kannada, Tamil, Telugu,
-Malayalam, Punjabi, Bengali, Gujarati, Assamese, Odia,
-Urdu, Nepali, Konkani, Sanskrit and other languages you understand.
-
-If the user mixes languages, respond naturally in the same mix.
-
-Answer clearly, directly and helpfully.
-
-If you are unsure, say so honestly.
+STYLE:
+- Be clear, direct and helpful.
+- Do not unnecessarily repeat the user's question.
+- If unsure, say so honestly.
 `;
 }
 
@@ -82,15 +80,11 @@ If you are unsure, say so honestly.
 const sessions = new Map();
 
 function getHistory(sessionId) {
-
   if (!sessions.has(sessionId)) {
-
     sessions.set(sessionId, []);
-
   }
 
   return sessions.get(sessionId);
-
 }
 
 
@@ -99,43 +93,29 @@ function getHistory(sessionId) {
 ========================= */
 
 async function askGemini(history) {
-
   if (!ai) {
-
-    throw new Error(
-      "Gemini key is not configured"
-    );
-
+    throw new Error("Gemini key is not configured");
   }
 
   const response =
     await ai.models.generateContent({
+      model: "gemini-3.1-flash-lite",
 
-      model:
-        "gemini-3.1-flash-lite",
-
-      contents:
-        history,
+      contents: history,
 
       config: {
-
         systemInstruction:
           getSystemInstruction(),
 
         tools: [
-
           {
             googleSearch: {}
           }
-
         ]
-
       }
-
     });
 
   return response.text;
-
 }
 
 
@@ -144,25 +124,19 @@ async function askGemini(history) {
 ========================= */
 
 async function askOpenRouter(history) {
-
   if (!openRouterKey) {
-
     throw new Error(
       "OpenRouter key is not configured"
     );
-
   }
 
   const messages = [
-
     {
       role: "system",
-      content:
-        getSystemInstruction()
+      content: getSystemInstruction()
     },
 
     ...history.map((item) => ({
-
       role:
         item.role === "model"
           ? "assistant"
@@ -170,21 +144,16 @@ async function askOpenRouter(history) {
 
       content:
         item.parts?.[0]?.text || ""
-
     }))
-
   ];
-
 
   const response =
     await fetch(
       "https://openrouter.ai/api/v1/chat/completions",
       {
-
         method: "POST",
 
         headers: {
-
           "Authorization":
             `Bearer ${openRouterKey}`,
 
@@ -196,44 +165,28 @@ async function askOpenRouter(history) {
 
           "X-Title":
             "JARVIS 45"
-
         },
 
         body: JSON.stringify({
-
-          model:
-            "openrouter/free",
-
-          messages:
-            messages
-
+          model: "openrouter/free",
+          messages: messages
         })
-
       }
-
     );
-
 
   const data =
     await response.json();
 
-
   if (!response.ok) {
-
     throw new Error(
-
       `OpenRouter ${response.status}: ${
         data?.error?.message ||
         "Unknown error"
       }`
-
     );
-
   }
 
-
   return data?.choices?.[0]?.message?.content;
-
 }
 
 
@@ -252,47 +205,35 @@ app.post(
       req.body?.sessionId ||
       "default";
 
-
     const history =
       getHistory(sessionId);
 
-
     if (!message) {
-
       return res.status(400).json({
-
         error:
           "Please enter a message."
-
       });
-
     }
 
-
     history.push({
-
       role: "user",
 
       parts: [
-
         {
           text: message
         }
-
       ]
-
     });
 
-
     if (history.length > 20) {
-
       history.splice(
         0,
         history.length - 20
       );
-
     }
 
+
+    /* GEMINI */
 
     try {
 
@@ -300,10 +241,8 @@ app.post(
         "JARVIS: Trying Gemini..."
       );
 
-
       const reply =
         await askGemini(history);
-
 
       if (reply) {
 
@@ -311,30 +250,20 @@ app.post(
           "JARVIS: Gemini response received."
         );
 
-
         history.push({
-
           role: "model",
 
           parts: [
-
             {
               text: reply
             }
-
           ]
-
         });
-
 
         return res.json({
-
           reply: reply,
-
           provider: "gemini"
-
         });
-
       }
 
     } catch (error) {
@@ -347,16 +276,16 @@ app.post(
     }
 
 
+    /* OPENROUTER BACKUP */
+
     try {
 
       console.log(
         "JARVIS: Switching to backup AI..."
       );
 
-
       const reply =
         await askOpenRouter(history);
-
 
       if (reply) {
 
@@ -364,37 +293,25 @@ app.post(
           "JARVIS: Backup AI response received."
         );
 
-
         history.push({
-
           role: "model",
 
           parts: [
-
             {
               text: reply
             }
-
           ]
-
         });
-
 
         return res.json({
-
           reply: reply,
-
           provider: "backup"
-
         });
-
       }
-
 
       throw new Error(
         "Backup AI returned empty response."
       );
-
 
     } catch (error) {
 
@@ -403,16 +320,11 @@ app.post(
         error?.message || error
       );
 
-
       return res.status(503).json({
-
         error:
           "All AI services are temporarily unavailable."
-
       });
-
     }
-
   }
 );
 
@@ -428,25 +340,15 @@ app.post(
     const sessionId =
       req.body?.sessionId;
 
-
     if (sessionId) {
-
-      sessions.delete(
-        sessionId
-      );
-
+      sessions.delete(sessionId);
     }
 
-
     res.json({
-
       success: true,
-
       message:
         "New chat started."
-
     });
-
   }
 );
 
@@ -462,22 +364,16 @@ app.post(
     const sessionId =
       req.body?.sessionId;
 
-
     const history =
       sessionId
         ? sessions.get(sessionId) || []
         : [];
 
-
     res.json({
-
       enabled: true,
-
       messages:
         history.length
-
     });
-
   }
 );
 
@@ -493,25 +389,90 @@ app.post(
     const sessionId =
       req.body?.sessionId;
 
-
     if (sessionId) {
-
-      sessions.delete(
-        sessionId
-      );
-
+      sessions.delete(sessionId);
     }
 
-
     res.json({
-
       success: true,
-
       message:
         "JARVIS memory cleared."
-
     });
+  }
+);
 
+
+/* =========================
+   REAL WEB SEARCH
+========================= */
+
+app.post(
+  "/api/search",
+  async (req, res) => {
+
+    const query =
+      req.body?.query?.trim();
+
+    if (!query) {
+      return res.status(400).json({
+        success: false,
+        error:
+          "Search query is required."
+      });
+    }
+
+    try {
+
+      console.log(
+        "JARVIS: Web searching:",
+        query
+      );
+
+      const response =
+        await purili.search(
+          query,
+          {
+            page: 1,
+            exact: false
+          }
+        );
+
+      const results =
+        (response.results || [])
+          .slice(0, 6)
+          .map((item) => ({
+            title:
+              item.title ||
+              "Untitled",
+
+            url:
+              item.url ||
+              "",
+
+            description:
+              item.description ||
+              ""
+          }));
+
+      return res.json({
+        success: true,
+        query: query,
+        results: results
+      });
+
+    } catch (error) {
+
+      console.error(
+        "WEB SEARCH FAILED:",
+        error?.message || error
+      );
+
+      return res.status(500).json({
+        success: false,
+        error:
+          "Web search is temporarily unavailable."
+      });
+    }
   }
 );
 
@@ -530,18 +491,12 @@ app.post(
     const content =
       req.body?.content ?? "";
 
-
     if (!filename) {
-
       return res.status(400).json({
-
         error:
           "File name is required."
-
       });
-
     }
-
 
     const safeFilename =
       filename
@@ -551,10 +506,8 @@ app.post(
         )
         .slice(0, 100);
 
-
     let mimeType =
       "text/plain";
-
 
     if (
       safeFilename
@@ -565,9 +518,7 @@ app.post(
       mimeType =
         "text/html";
 
-    }
-
-    else if (
+    } else if (
       safeFilename
         .toLowerCase()
         .endsWith(".json")
@@ -576,9 +527,7 @@ app.post(
       mimeType =
         "application/json";
 
-    }
-
-    else if (
+    } else if (
       safeFilename
         .toLowerCase()
         .endsWith(".csv")
@@ -587,9 +536,7 @@ app.post(
       mimeType =
         "text/csv";
 
-    }
-
-    else if (
+    } else if (
       safeFilename
         .toLowerCase()
         .endsWith(".md")
@@ -597,12 +544,9 @@ app.post(
 
       mimeType =
         "text/markdown";
-
     }
 
-
     res.json({
-
       success: true,
 
       filename:
@@ -613,191 +557,7 @@ app.post(
 
       mimeType:
         mimeType
-
     });
-
-  }
-);
-
-
-/* =========================
-   CREATE IMAGE - GEMINI
-========================= */
-
-app.post(
-  "/api/create-image",
-  async (req, res) => {
-
-    const prompt =
-      req.body?.prompt?.trim();
-
-
-    if (!prompt) {
-
-      return res.status(400).json({
-
-        success: false,
-
-        error:
-          "Image prompt is required."
-
-      });
-
-    }
-
-
-    if (!geminiKey) {
-
-      return res.status(503).json({
-
-        success: false,
-
-        error:
-          "Gemini API key is not configured."
-
-      });
-
-    }
-
-
-    try {
-
-      console.log(
-        "JARVIS: Creating image with Gemini..."
-      );
-
-
-      const response =
-        await fetch(
-          "https://generativelanguage.googleapis.com/v1beta/interactions",
-          {
-
-            method: "POST",
-
-            headers: {
-
-              "x-goog-api-key":
-                geminiKey,
-
-              "Content-Type":
-                "application/json"
-
-            },
-
-            body: JSON.stringify({
-
-              model:
-                "gemini-3.1-flash-image",
-
-              input:
-                prompt,
-
-              response_format: {
-
-                type: "image",
-
-                aspect_ratio:
-                  "1:1",
-
-                image_size:
-                  "1K"
-
-              }
-
-            })
-
-          }
-        );
-
-
-      const data =
-        await response.json();
-
-
-      if (!response.ok) {
-
-        console.error(
-          "GEMINI IMAGE ERROR:",
-          JSON.stringify(data)
-        );
-
-
-        return res.status(
-          response.status
-        ).json({
-
-          success: false,
-
-          error:
-            data?.error?.message ||
-            "Gemini image generation failed."
-
-        });
-
-      }
-
-
-      const image =
-        data?.output_image?.data;
-
-
-      const mediaType =
-        data?.output_image?.mime_type ||
-        "image/png";
-
-
-      if (!image) {
-
-        return res.status(500).json({
-
-          success: false,
-
-          error:
-            "Gemini did not return an image."
-
-        });
-
-      }
-
-
-      console.log(
-        "JARVIS: Gemini image created."
-      );
-
-
-      return res.json({
-
-        success: true,
-
-        image:
-          image,
-
-        mediaType:
-          mediaType
-
-      });
-
-
-    } catch (error) {
-
-      console.error(
-        "IMAGE GENERATION FAILED:",
-        error?.message || error
-      );
-
-
-      return res.status(500).json({
-
-        success: false,
-
-        error:
-          error?.message ||
-          "Image generation failed."
-
-      });
-
-    }
-
   }
 );
 
@@ -811,7 +571,6 @@ app.get(
   (req, res) => {
 
     res.json({
-
       status:
         "JARVIS backend is working",
 
@@ -820,9 +579,7 @@ app.get(
 
       backupAI:
         !!openRouterKey
-
     });
-
   }
 );
 
@@ -839,6 +596,5 @@ app.listen(
     console.log(
       `JARVIS running on port ${PORT}`
     );
-
   }
 );
