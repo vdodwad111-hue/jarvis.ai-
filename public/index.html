@@ -32,8 +32,6 @@ body{
         radial-gradient(circle at 50% 25%,#063d5c 0%,#02131f 28%,#01070d 60%,#000 100%);
 }
 
-/* BACKGROUND */
-
 body::before{
     content:"";
     position:fixed;
@@ -61,8 +59,6 @@ body::after{
     to{transform:translateY(42px)}
 }
 
-/* APP */
-
 .app{
     position:relative;
     z-index:2;
@@ -71,8 +67,6 @@ body::after{
     display:flex;
     flex-direction:column;
 }
-
-/* HEADER */
 
 header{
     flex-shrink:0;
@@ -134,16 +128,12 @@ header{
     }
 }
 
-/* MAIN HOME */
-
 .main{
     flex:1;
     min-height:0;
     position:relative;
     overflow:hidden;
 }
-
-/* HOME CONTENT */
 
 .home{
     width:100%;
@@ -157,8 +147,6 @@ header{
 .home::-webkit-scrollbar{
     display:none;
 }
-
-/* CORE */
 
 .core-area{
     height:245px;
@@ -299,8 +287,6 @@ body.speaking .core{
     }
 }
 
-/* ORBITS */
-
 .orbit{
     position:absolute;
     border:1px solid rgba(0,210,255,.5);
@@ -351,8 +337,6 @@ body.speaking .core{
     letter-spacing:3px;
 }
 
-/* VOICE */
-
 .voice-control{
     display:flex;
     justify-content:center;
@@ -387,8 +371,6 @@ body.listening .voice-button{
     border-color:#00efff;
     box-shadow:0 0 25px rgba(0,220,255,.55);
 }
-
-/* WAVE */
 
 .waveform{
     height:35px;
@@ -427,8 +409,6 @@ body:not(.listening):not(.speaking) .wave{
     height:5px;
 }
 
-/* ACTIONS */
-
 .actions-title{
     max-width:850px;
     margin:15px auto 8px;
@@ -451,29 +431,23 @@ body:not(.listening):not(.speaking) .wave{
     min-height:58px;
     padding:10px 12px;
     border-radius:13px;
-
     border:1px solid rgba(0,205,255,.23);
-
     background:
         linear-gradient(
             145deg,
             rgba(25,110,145,.20),
             rgba(2,20,32,.38)
         );
-
     backdrop-filter:blur(16px);
     -webkit-backdrop-filter:blur(16px);
-
     color:white;
     display:flex;
     align-items:center;
     gap:10px;
     text-align:left;
-
     box-shadow:
         0 8px 20px rgba(0,0,0,.25),
         inset 0 1px rgba(255,255,255,.07);
-
     transition:.18s ease;
 }
 
@@ -515,7 +489,7 @@ body:not(.listening):not(.speaking) .wave{
     color:rgba(190,230,245,.42);
 }
 
-/* CHAT MODE */
+/* CHAT */
 
 .chat-screen{
     display:none;
@@ -609,6 +583,80 @@ body:not(.listening):not(.speaking) .wave{
         opacity:1;
         transform:translateY(-4px);
     }
+}
+
+/* FLOATING MENU */
+
+.menu-button{
+    display:none;
+    position:fixed;
+    left:10px;
+    top:115px;
+    z-index:50;
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    border:1px solid rgba(0,225,255,.55);
+    background:
+        radial-gradient(circle at 35% 30%,
+        #dffcff 0%,
+        #00d9ff 12%,
+        #0077ff 42%,
+        #00335a 75%);
+    color:white;
+    font-size:21px;
+    box-shadow:
+        0 0 15px #00bfff,
+        0 0 35px rgba(0,150,255,.65);
+}
+
+.chat-screen.active ~ .menu-button{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.menu-panel{
+    display:none;
+    position:fixed;
+    left:9px;
+    top:170px;
+    z-index:49;
+    width:min(285px,calc(100vw - 18px));
+    max-height:calc(100dvh - 245px);
+    overflow-y:auto;
+    padding:10px;
+    border:1px solid rgba(0,205,255,.28);
+    border-radius:17px;
+    background:rgba(1,15,25,.82);
+    backdrop-filter:blur(24px);
+    -webkit-backdrop-filter:blur(24px);
+    box-shadow:
+        0 15px 50px rgba(0,0,0,.55),
+        0 0 30px rgba(0,150,255,.16);
+}
+
+.menu-panel.open{
+    display:grid;
+    gap:7px;
+}
+
+.menu-panel .action{
+    width:100%;
+}
+
+.stop-voice{
+    border-color:rgba(255,70,70,.45);
+    background:linear-gradient(
+        145deg,
+        rgba(160,35,35,.24),
+        rgba(45,10,10,.35)
+    );
+}
+
+.stop-voice .action-icon{
+    background:rgba(255,50,50,.12);
+    border-color:rgba(255,70,70,.25);
 }
 
 /* INPUT */
@@ -735,6 +783,18 @@ body:not(.listening):not(.speaking) .wave{
         width:55px;
         height:46px;
     }
+
+    .menu-button{
+        top:108px;
+        left:8px;
+        width:44px;
+        height:44px;
+    }
+
+    .menu-panel{
+        top:160px;
+        left:7px;
+    }
 }
 </style>
 </head>
@@ -757,7 +817,6 @@ body:not(.listening):not(.speaking) .wave{
     </div>
 
 </header>
-
 
 <div class="main">
 
@@ -784,7 +843,6 @@ body:not(.listening):not(.speaking) .wave{
 
         </div>
 
-
         <div class="voice-control">
 
             <button class="voice-button" onclick="startListening()">
@@ -792,7 +850,6 @@ body:not(.listening):not(.speaking) .wave{
             </button>
 
         </div>
-
 
         <div class="waveform">
 
@@ -808,11 +865,9 @@ body:not(.listening):not(.speaking) .wave{
 
         </div>
 
-
         <div class="actions-title">
             JARVIS QUICK ACCESS
         </div>
-
 
         <div class="actions">
 
@@ -892,7 +947,6 @@ body:not(.listening):not(.speaking) .wave{
 
     </div>
 
-
     <!-- CHAT SCREEN -->
 
     <div class="chat-screen" id="chatScreen">
@@ -913,6 +967,102 @@ body:not(.listening):not(.speaking) .wave{
 
 </div>
 
+<!-- FLOATING MENU BUTTON -->
+
+<button
+    class="menu-button"
+    id="menuButton"
+    onclick="toggleMenu()"
+    title="JARVIS Menu"
+>
+    🔵
+</button>
+
+<!-- FLOATING MENU PANEL -->
+
+<div class="menu-panel" id="menuPanel">
+
+    <button class="action" onclick="menuAction(startListening)">
+        <span class="action-icon">🎙️</span>
+        <span class="action-text">
+            <span class="action-name">Voice Assistant</span>
+            <span class="action-sub">Talk with JARVIS</span>
+        </span>
+    </button>
+
+    <button class="action" onclick="menuAction(newChat)">
+        <span class="action-icon">💬</span>
+        <span class="action-text">
+            <span class="action-name">New Chat</span>
+            <span class="action-sub">Start fresh</span>
+        </span>
+    </button>
+
+    <button class="action" onclick="menuAction(webSearch)">
+        <span class="action-icon">🌐</span>
+        <span class="action-text">
+            <span class="action-name">Web Search</span>
+            <span class="action-sub">Search the web</span>
+        </span>
+    </button>
+
+    <button class="action" onclick="menuAction(openFiles)">
+        <span class="action-icon">📁</span>
+        <span class="action-text">
+            <span class="action-name">My Files</span>
+            <span class="action-sub">Open your files</span>
+        </span>
+    </button>
+
+    <button class="action" onclick="menuAction(showHistory)">
+        <span class="action-icon">🕘</span>
+        <span class="action-text">
+            <span class="action-name">Chat History</span>
+            <span class="action-sub">Previous conversations</span>
+        </span>
+    </button>
+
+    <button class="action" onclick="menuAction(showMemory)">
+        <span class="action-icon">🧠</span>
+        <span class="action-text">
+            <span class="action-name">Memory</span>
+            <span class="action-sub">JARVIS memory</span>
+        </span>
+    </button>
+
+    <button class="action" onclick="menuAction(feedback)">
+        <span class="action-icon">⭐</span>
+        <span class="action-text">
+            <span class="action-name">Feedback</span>
+            <span class="action-sub">Tell us what you think</span>
+        </span>
+    </button>
+
+    <button class="action" onclick="menuAction(settings)">
+        <span class="action-icon">⚙️</span>
+        <span class="action-text">
+            <span class="action-name">Settings</span>
+            <span class="action-sub">JARVIS controls</span>
+        </span>
+    </button>
+
+    <button class="action" onclick="menuAction(aboutJarvis)">
+        <span class="action-icon">ℹ️</span>
+        <span class="action-text">
+            <span class="action-name">About JARVIS</span>
+            <span class="action-sub">JARVIS 45 information</span>
+        </span>
+    </button>
+
+    <button class="action stop-voice" onclick="menuAction(stopVoice)">
+        <span class="action-icon">🛑</span>
+        <span class="action-text">
+            <span class="action-name">Stop Voice</span>
+            <span class="action-sub">Stop JARVIS speaking</span>
+        </span>
+    </button>
+
+</div>
 
 <!-- INPUT -->
 
@@ -946,14 +1096,63 @@ body:not(.listening):not(.speaking) .wave{
 
 </div>
 
-
 <script>
 
 let currentRecognition=null;
 
+
+/* =========================
+   CORE STATE
+========================= */
+
 function setCoreState(text){
-    const state=document.getElementById("coreState");
-    if(state) state.textContent=text;
+
+    const state=
+        document.getElementById("coreState");
+
+    if(state){
+        state.textContent=text;
+    }
+
+}
+
+
+/* =========================
+   MENU
+========================= */
+
+function toggleMenu(){
+
+    const panel=
+        document.getElementById("menuPanel");
+
+    if(panel){
+        panel.classList.toggle("open");
+    }
+
+}
+
+
+function closeMenu(){
+
+    const panel=
+        document.getElementById("menuPanel");
+
+    if(panel){
+        panel.classList.remove("open");
+    }
+
+}
+
+
+function menuAction(action){
+
+    closeMenu();
+
+    if(typeof action==="function"){
+        action();
+    }
+
 }
 
 
@@ -964,9 +1163,9 @@ function setCoreState(text){
 function openChat(){
 
     document.getElementById("homeScreen").style.display="none";
-    document.getElementById("chatScreen").classList.add("active");
 
-    document.getElementById("msg").focus();
+    document.getElementById("chatScreen")
+        .classList.add("active");
 
 }
 
@@ -977,16 +1176,21 @@ function openChat(){
 
 async function send(){
 
-    const input=document.getElementById("msg");
-    const question=input.value.trim();
+    const input=
+        document.getElementById("msg");
+
+    const question=
+        input.value.trim();
 
     if(!question) return;
 
     openChat();
 
-    const chat=document.getElementById("chat");
+    const chat=
+        document.getElementById("chat");
 
-    const userMessage=document.createElement("div");
+    const userMessage=
+        document.createElement("div");
 
     userMessage.className="message user";
     userMessage.textContent=question;
@@ -995,9 +1199,12 @@ async function send(){
 
     input.value="";
 
-    const typing=document.createElement("div");
+    const typing=
+        document.createElement("div");
 
-    typing.className="message jarvis typing";
+    typing.className=
+        "message jarvis typing";
+
     typing.innerHTML=
         '<span class="dot">•</span> '+
         '<span class="dot">•</span> '+
@@ -1007,24 +1214,26 @@ async function send(){
 
     setCoreState("THINKING");
 
-    chat.scrollTop=chat.scrollHeight;
+    chat.scrollTop=
+        chat.scrollHeight;
 
 
     try{
 
-        const response=await fetch("/api/chat",{
+        const response=
+            await fetch("/api/chat",{
 
-            method:"POST",
+                method:"POST",
 
-            headers:{
-                "Content-Type":"application/json"
-            },
+                headers:{
+                    "Content-Type":"application/json"
+                },
 
-            body:JSON.stringify({
-                message:question
-            })
+                body:JSON.stringify({
+                    message:question
+                })
 
-        });
+            });
 
 
         if(!response.ok){
@@ -1032,14 +1241,17 @@ async function send(){
         }
 
 
-        const data=await response.json();
+        const data=
+            await response.json();
 
         typing.remove();
 
 
-        const jarvisMessage=document.createElement("div");
+        const jarvisMessage=
+            document.createElement("div");
 
-        jarvisMessage.className="message jarvis";
+        jarvisMessage.className=
+            "message jarvis";
 
         jarvisMessage.textContent=
             data.reply ||
@@ -1047,22 +1259,27 @@ async function send(){
 
         chat.appendChild(jarvisMessage);
 
-        chat.scrollTop=chat.scrollHeight;
+        chat.scrollTop=
+            chat.scrollHeight;
 
         saveHistory(
             question,
             data.reply || ""
         );
 
-        speak(data.reply || "");
+        speak(
+            data.reply || ""
+        );
 
     }catch(error){
 
         typing.remove();
 
-        const errorMessage=document.createElement("div");
+        const errorMessage=
+            document.createElement("div");
 
-        errorMessage.className="message jarvis";
+        errorMessage.className=
+            "message jarvis";
 
         errorMessage.textContent=
             "Sorry, JARVIS couldn't respond right now.";
@@ -1094,12 +1311,17 @@ function speak(text){
         return;
     }
 
+
+    speechSynthesis.cancel();
+
+
     const voice=
         new SpeechSynthesisUtterance(text);
 
     voice.lang="en-IN";
     voice.rate=.9;
     voice.pitch=1;
+
 
     voice.onstart=function(){
 
@@ -1109,6 +1331,7 @@ function speak(text){
 
     };
 
+
     voice.onend=function(){
 
         document.body.classList.remove("speaking");
@@ -1116,6 +1339,7 @@ function speak(text){
         setCoreState("STANDBY");
 
     };
+
 
     voice.onerror=function(){
 
@@ -1125,9 +1349,27 @@ function speak(text){
 
     };
 
-    speechSynthesis.cancel();
 
     speechSynthesis.speak(voice);
+
+}
+
+
+/* =========================
+   STOP VOICE
+========================= */
+
+function stopVoice(){
+
+    if("speechSynthesis" in window){
+
+        speechSynthesis.cancel();
+
+    }
+
+    document.body.classList.remove("speaking");
+
+    setCoreState("STANDBY");
 
 }
 
@@ -1141,6 +1383,7 @@ function startListening(){
     const SpeechRecognition=
         window.SpeechRecognition ||
         window.webkitSpeechRecognition;
+
 
     if(!SpeechRecognition){
 
@@ -1167,7 +1410,8 @@ function startListening(){
     const recognition=
         new SpeechRecognition();
 
-    currentRecognition=recognition;
+    currentRecognition=
+        recognition;
 
     recognition.lang="en-IN";
     recognition.continuous=false;
@@ -1212,7 +1456,8 @@ function startListening(){
 
         setCoreState("STANDBY");
 
-        input.placeholder="Ask JARVIS...";
+        input.placeholder=
+            "Ask JARVIS...";
 
     };
 
@@ -1221,9 +1466,11 @@ function startListening(){
 
         document.body.classList.remove("listening");
 
-        input.placeholder="Ask JARVIS...";
+        input.placeholder=
+            "Ask JARVIS...";
 
-        currentRecognition=null;
+        currentRecognition=
+            null;
 
     };
 
@@ -1278,6 +1525,8 @@ function webSearch(){
 
 async function newChat(){
 
+    stopVoice();
+
     try{
 
         await fetch("/api/new-chat",{
@@ -1288,8 +1537,20 @@ async function newChat(){
         });
 
     }catch(error){
+
         console.log(error);
+
     }
+
+
+    const chat=
+        document.getElementById("chat");
+
+    chat.innerHTML=
+        '<div class="chat-header">LIVE CONVERSATION</div>'+
+        '<div class="message jarvis">'+
+        'Hello! I am JARVIS 45. All systems are online. How may I assist you?'+
+        '</div>';
 
 
     document.getElementById("chatScreen")
@@ -1425,7 +1686,9 @@ async function showMemory(){
 
 
     const memory=
-        localStorage.getItem("jarvisMemory");
+        localStorage.getItem(
+            "jarvisMemory"
+        );
 
     alert(
         "JARVIS MEMORY\n\n"+
@@ -1555,4 +1818,4 @@ document.getElementById("msg")
 </script>
 
 </body>
-  </html>
+                                   </html>
