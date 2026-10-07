@@ -71,7 +71,7 @@ body::after{
 }
 
 /* =========================
-   TOP LEFT MENU BUTTON
+   TOP LEFT MENU
 ========================= */
 
 .menu-button{
@@ -79,34 +79,26 @@ body::after{
     top:12px;
     left:12px;
     z-index:1000;
-
     width:43px;
     height:43px;
-
     border-radius:13px;
     border:1px solid rgba(0,220,255,.4);
-
     background:
         linear-gradient(
             145deg,
             rgba(0,180,255,.25),
             rgba(0,45,70,.45)
         );
-
     color:white;
     font-size:21px;
-
     display:flex;
     align-items:center;
     justify-content:center;
-
     box-shadow:
         0 0 18px rgba(0,190,255,.2),
         inset 0 1px rgba(255,255,255,.1);
-
     backdrop-filter:blur(15px);
     -webkit-backdrop-filter:blur(15px);
-
     transition:.2s ease;
 }
 
@@ -115,40 +107,31 @@ body::after{
 }
 
 /* =========================
-   SIDE OPTIONS
+   SIDE MENU
 ========================= */
 
 .menu-panel{
     position:fixed;
     top:0;
     left:0;
-
     width:min(285px,82vw);
     height:100dvh;
-
     z-index:999;
-
     padding:75px 14px 20px;
-
     background:
         linear-gradient(
             180deg,
             rgba(1,18,30,.97),
             rgba(0,5,12,.98)
         );
-
     border-right:1px solid rgba(0,205,255,.25);
-
     box-shadow:
         12px 0 45px rgba(0,0,0,.6),
         0 0 35px rgba(0,160,255,.12);
-
     backdrop-filter:blur(22px);
     -webkit-backdrop-filter:blur(22px);
-
     transform:translateX(-105%);
     transition:transform .28s cubic-bezier(.22,.8,.25,1);
-
     overflow-y:auto;
 }
 
@@ -163,7 +146,6 @@ body::after{
     font-weight:bold;
     letter-spacing:3px;
     margin-bottom:5px;
-
     text-shadow:
         0 0 10px #00d9ff,
         0 0 25px rgba(0,180,255,.5);
@@ -180,32 +162,24 @@ body::after{
 .menu-option{
     width:100%;
     min-height:55px;
-
     margin-bottom:8px;
     padding:9px 12px;
-
     border-radius:13px;
     border:1px solid rgba(0,205,255,.22);
-
     background:
         linear-gradient(
             145deg,
             rgba(20,105,140,.20),
             rgba(2,20,32,.55)
         );
-
     color:white;
-
     display:flex;
     align-items:center;
     gap:12px;
-
     text-align:left;
-
     box-shadow:
         0 7px 18px rgba(0,0,0,.25),
         inset 0 1px rgba(255,255,255,.06);
-
     transition:.18s ease;
 }
 
@@ -217,18 +191,13 @@ body::after{
 .menu-option-icon{
     width:35px;
     height:35px;
-
     flex-shrink:0;
-
     display:flex;
     align-items:center;
     justify-content:center;
-
     border-radius:10px;
-
     background:rgba(0,190,255,.09);
     border:1px solid rgba(0,210,255,.18);
-
     font-size:17px;
 }
 
@@ -248,12 +217,9 @@ body::after{
     position:fixed;
     inset:0;
     z-index:998;
-
     background:rgba(0,0,0,.48);
-
     opacity:0;
     pointer-events:none;
-
     transition:.25s ease;
 }
 
@@ -388,7 +354,6 @@ header{
     align-items:center;
     justify-content:center;
     overflow:hidden;
-
     background:
         radial-gradient(circle at 35% 28%,
             #e8fbff 0%,
@@ -397,13 +362,11 @@ header{
             #0078b8 35%,
             #003451 58%,
             #00111c 78%);
-
     box-shadow:
         0 0 18px #00cfff,
         0 0 45px rgba(0,185,255,.9),
         0 0 95px rgba(0,115,190,.65),
         inset 0 0 35px #00eaff;
-
     animation:coreIdle 2.1s ease-in-out infinite;
     transition:transform .12s ease,box-shadow .12s ease;
 }
@@ -415,7 +378,6 @@ header{
     height:170%;
     left:-35%;
     top:-35%;
-
     background:
         radial-gradient(
             ellipse at 30% 30%,
@@ -435,7 +397,6 @@ header{
             rgba(0,120,255,.7),
             transparent
         );
-
     filter:blur(5px);
     animation:lavaSpin 3s linear infinite;
 }
@@ -677,91 +638,9 @@ body:not(.listening):not(.speaking) .wave{
     font-size:12px;
 }
 
-/* QUICK ACTIONS */
-
-.actions-title{
-    max-width:850px;
-    margin:18px auto 8px;
-    color:rgba(170,235,255,.5);
-    font-size:9px;
-    letter-spacing:3px;
-    text-transform:uppercase;
-}
-
-.actions{
-    width:100%;
-    max-width:850px;
-    margin:auto;
-    display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:9px;
-}
-
-.action{
-    min-height:58px;
-    padding:10px 12px;
-    border-radius:13px;
-    border:1px solid rgba(0,205,255,.23);
-    background:
-        linear-gradient(
-            145deg,
-            rgba(25,110,145,.20),
-            rgba(2,20,32,.38)
-        );
-    backdrop-filter:blur(16px);
-    color:white;
-    display:flex;
-    align-items:center;
-    gap:10px;
-    text-align:left;
-    box-shadow:
-        0 8px 20px rgba(0,0,0,.25),
-        inset 0 1px rgba(255,255,255,.07);
-    transition:.18s ease;
-}
-
-.action:active{
-    transform:translateY(2px) scale(.98);
-}
-
-.action:hover{
-    border-color:rgba(0,220,255,.58);
-    background:rgba(0,100,140,.24);
-    box-shadow:
-        0 0 22px rgba(0,190,255,.18),
-        inset 0 1px rgba(255,255,255,.1);
-}
-
-.action-icon{
-    width:31px;
-    height:31px;
-    flex-shrink:0;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    border-radius:9px;
-    background:rgba(0,190,255,.09);
-    border:1px solid rgba(0,210,255,.18);
-    font-size:16px;
-}
-
-.action-text{
-    min-width:0;
-}
-
-.action-name{
-    font-size:12px;
-    font-weight:bold;
-    letter-spacing:.5px;
-}
-
-.action-sub{
-    margin-top:2px;
-    font-size:8px;
-    color:rgba(190,230,245,.42);
-}
-
-/* INPUT */
+/* =========================
+   INPUT
+========================= */
 
 #inputArea{
     flex-shrink:0;
@@ -844,29 +723,6 @@ body:not(.listening):not(.speaking) .wave{
     .creator{
         font-size:8px;
         letter-spacing:1.8px;
-    }
-
-    .actions{
-        gap:7px;
-    }
-
-    .action{
-        min-height:55px;
-        padding:8px;
-    }
-
-    .action-icon{
-        width:29px;
-        height:29px;
-        font-size:15px;
-    }
-
-    .action-name{
-        font-size:11px;
-    }
-
-    .action-sub{
-        font-size:7px;
     }
 
     .message{
@@ -991,7 +847,6 @@ body:not(.listening):not(.speaking) .wave{
 
 </div>
 
-
 <header>
 
     <div class="logo">JARVIS 45</div>
@@ -1006,7 +861,6 @@ body:not(.listening):not(.speaking) .wave{
     </div>
 
 </header>
-
 
 <div class="main">
 
@@ -1029,7 +883,6 @@ body:not(.listening):not(.speaking) .wave{
 
     </div>
 
-
     <div class="voice-control">
 
         <button class="voice-button" onclick="startListening()">
@@ -1037,7 +890,6 @@ body:not(.listening):not(.speaking) .wave{
         </button>
 
     </div>
-
 
     <div class="waveform">
 
@@ -1053,7 +905,6 @@ body:not(.listening):not(.speaking) .wave{
 
     </div>
 
-
     <div class="chat-title">
         LIVE CONVERSATION
     </div>
@@ -1066,89 +917,7 @@ body:not(.listening):not(.speaking) .wave{
 
     </div>
 
-
-    <div class="actions-title">
-        JARVIS QUICK ACCESS
-    </div>
-
-    <div class="actions">
-
-        <button class="action" onclick="startListening()">
-            <span class="action-icon">🎙️</span>
-            <span class="action-text">
-                <span class="action-name">Voice Assistant</span>
-                <span class="action-sub">Talk with JARVIS</span>
-            </span>
-        </button>
-
-        <button class="action" onclick="newChat()">
-            <span class="action-icon">💬</span>
-            <span class="action-text">
-                <span class="action-name">New Chat</span>
-                <span class="action-sub">Start fresh</span>
-            </span>
-        </button>
-
-        <button class="action" onclick="webSearch()">
-            <span class="action-icon">🌐</span>
-            <span class="action-text">
-                <span class="action-name">Web Search</span>
-                <span class="action-sub">Search the web</span>
-            </span>
-        </button>
-
-        <button class="action" onclick="openFiles()">
-            <span class="action-icon">📁</span>
-            <span class="action-text">
-                <span class="action-name">My Files</span>
-                <span class="action-sub">Open your files</span>
-            </span>
-        </button>
-
-        <button class="action" onclick="showHistory()">
-            <span class="action-icon">🕘</span>
-            <span class="action-text">
-                <span class="action-name">Chat History</span>
-                <span class="action-sub">Previous conversations</span>
-            </span>
-        </button>
-
-        <button class="action" onclick="showMemory()">
-            <span class="action-icon">🧠</span>
-            <span class="action-text">
-                <span class="action-name">Memory</span>
-                <span class="action-sub">JARVIS memory</span>
-            </span>
-        </button>
-
-        <button class="action" onclick="feedback()">
-            <span class="action-icon">⭐</span>
-            <span class="action-text">
-                <span class="action-name">Feedback</span>
-                <span class="action-sub">Tell us what you think</span>
-            </span>
-        </button>
-
-        <button class="action" onclick="settings()">
-            <span class="action-icon">⚙️</span>
-            <span class="action-text">
-                <span class="action-name">Settings</span>
-                <span class="action-sub">JARVIS controls</span>
-            </span>
-        </button>
-
-        <button class="action" onclick="aboutJarvis()">
-            <span class="action-icon">ℹ️</span>
-            <span class="action-text">
-                <span class="action-name">About JARVIS</span>
-                <span class="action-sub">JARVIS 45 information</span>
-            </span>
-        </button>
-
-    </div>
-
 </div>
-
 
 <div id="inputArea">
 
@@ -1179,7 +948,6 @@ body:not(.listening):not(.speaking) .wave{
 </div>
 
 </div>
-
 
 <script>
 
@@ -1259,6 +1027,8 @@ async function send(){
 
     setCoreState("THINKING");
 
+    chat.scrollTop=chat.scrollHeight;
+
     try{
 
         const response=await fetch("/ask",{
@@ -1276,7 +1046,9 @@ async function send(){
         });
 
         if(!response.ok){
-            throw new Error("Server returned "+response.status);
+            throw new Error(
+                "Server returned "+response.status
+            );
         }
 
         const data=await response.json();
@@ -1286,7 +1058,11 @@ async function send(){
         const answer=
             data.answer ||
             data.reply ||
-            "I could not generate a response.";
+            data.response;
+
+        if(!answer){
+            throw new Error("Empty response from JARVIS");
+        }
 
         const jarvisMessage=document.createElement("div");
 
@@ -1303,6 +1079,8 @@ async function send(){
 
     }catch(error){
 
+        console.error("JARVIS ERROR:",error);
+
         typing.remove();
 
         const errorMessage=document.createElement("div");
@@ -1315,8 +1093,6 @@ async function send(){
         chat.appendChild(errorMessage);
 
         setCoreState("SYSTEM ONLINE");
-
-        console.log("JARVIS ERROR:",error);
 
     }
 
@@ -1530,7 +1306,6 @@ function newChat(){
     setCoreState("STANDBY");
 
     document.getElementById("msg").focus();
-
 }
 
 
@@ -1691,7 +1466,6 @@ function feedback(){
     alert(
         "Thank you for your feedback! ⭐"
     );
-
 }
 
 
@@ -1709,7 +1483,6 @@ function settings(){
         "Memory: Ready\n"+
         "System Status: ONLINE"
     );
-
 }
 
 
@@ -1726,7 +1499,6 @@ function aboutJarvis(){
         "SOHAM DODWAD\n\n"+
         "SYSTEM ONLINE"
     );
-
 }
 
 
@@ -1752,4 +1524,4 @@ document.getElementById("msg").addEventListener(
 </script>
 
 </body>
-                                                                     </html>
+    </html>
